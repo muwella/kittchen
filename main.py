@@ -1,6 +1,40 @@
-from fastapi import FastAPI #FastAPI is a class
+#Python
+from lib2to3.pytree import Base
+from typing import Optional
+#Pydantic
+from pydantic import BaseModel
+#FastAPI
+from fastapi import FastAPI, Body
 
 app = FastAPI() # app is an instance of FastAPI
+
+
+# MODELS
+# unique? foreign key? passwords?
+# class User(BaseModel):
+#     name: str
+#     username: str
+#     password: str
+
+
+# class IngredientCategory(BaseModel):
+#     name: str
+
+
+# class Ingredient(BaseModel):
+#     name: str
+#     category: IngredientCategory
+
+
+class RecipeCategory(BaseModel):
+    name: str
+
+
+class Recipe(BaseModel):
+    title: str
+    # ingredients: list[Ingredient]
+    steps: Optional[str] = None
+    category: RecipeCategory
 
 
 # PATH OPERATION
@@ -38,3 +72,6 @@ def home(): # path operation function
 
 
 # REQUEST & RESPONSE BODY
+@app.post("/recipe/new")
+def create_recipe(recipe: Recipe = Body(...)):
+    return recipe
