@@ -37,6 +37,12 @@ class Recipe(BaseModel):
     category: RecipeCategory
 
 
+class Location(BaseModel):
+    city: str
+    state: str
+    country: str
+
+
 # PATH OPERATION
 @app.get("/") # path operation decorator
 def home(): # path operation function
@@ -129,3 +135,22 @@ def show_recipe(
         )
 ):
     return {recipe_id: 'ok'}
+
+
+# VALIDATIONS - REQUEST BODY
+@app.put("/recipe/{recipe_id}") # actualizar (put)
+# el cliente tiene que enviar un REQUEST BODY a la API
+def update_recipe(
+    recipe_id: int = Path(
+        ...,
+        title='Recipe ID',
+        description='This is the recipe ID',
+        gt=0
+    ),
+    recipe: Recipe = Body(...),
+    location: Location = Body(...)
+):
+    # devolver dos diccionarios en un único JSON
+    results = recipe.dict()
+    results.update(location.dict())
+    return results
