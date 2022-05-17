@@ -4,7 +4,7 @@ from typing import Optional
 #Pydantic
 from pydantic import BaseModel
 #FastAPI
-from fastapi import FastAPI, Body, Query
+from fastapi import FastAPI, Body, Query, Path
 
 app = FastAPI() # app is an instance of FastAPI
 
@@ -80,8 +80,18 @@ def create_recipe(recipe: Recipe = Body(...)):
 # VALIDATIONS - QUERY PARAMETERS
 @app.get("/recipe/detail")
 def show_recipe(
-    title: str = Query(..., min_length=1, max_length=50),
-    steps: Optional[str] = Query(None)
+    title: str = Query(
+        ...,
+        min_length=1,
+        max_length=50,
+        title='Recipe title',
+        description='A recipe with steps'
+        ),
+    steps: Optional[str] = Query(
+        None,
+        title='Recipe steps',
+        description="It explains how to do the recipe"
+        )
     ):
     return {title: steps}
 
@@ -106,3 +116,16 @@ def show_recipe(
     # SWAGGER
         # title
         # description
+
+
+# VALIDATIONS - PATH PARAMETERS
+@app.get("/recipe/detail/{recipe_id}")
+def show_recipe(
+    recipe_id: int = Path(
+        ...,
+        gt=0,
+        title='Recipe title',
+        description='A recipe with steps'
+        )
+):
+    return {recipe_id: 'ok'}
