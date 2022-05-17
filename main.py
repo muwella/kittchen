@@ -4,7 +4,7 @@ from typing import Optional
 #Pydantic
 from pydantic import BaseModel
 #FastAPI
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Query
 
 app = FastAPI() # app is an instance of FastAPI
 
@@ -75,3 +75,34 @@ def home(): # path operation function
 @app.post("/recipe/new")
 def create_recipe(recipe: Recipe = Body(...)):
     return recipe
+
+
+# VALIDATIONS - QUERY PARAMETERS
+@app.get("/recipe/detail")
+def show_recipe(
+    title: str = Query(..., min_length=1, max_length=50),
+    steps: Optional[str] = Query(None)
+    ):
+    return {title: steps}
+
+
+# Si necesito algo obligatorio es PATH PARAMETER
+# No QUERY PARAMETER
+# Puede pasar que lo necesite en algun caso
+    # (un QUERY PARAMETER obligatorio)
+    # Pero es raro, aunque se puede
+
+
+# VALIDATIONS - Parámetros
+    # min_length
+    # max_length
+    # regex
+
+    # ge (greater or equal than) >=
+    # le (less or equal than) <=
+    # gt (greater than) >
+    # lt (less than) <
+
+    # SWAGGER
+        # title
+        # description
