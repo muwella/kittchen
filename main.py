@@ -1,31 +1,53 @@
 #Python
-from typing import Optional, Union
+from typing import Optional, Union, List
 from enum import Enum
 #Pydantic
 from pydantic import BaseModel, Field, EmailStr
 #FastAPI
 from fastapi import FastAPI, Body, Query, Path
 
-app = FastAPI() # app is an instance of FastAPI
-
-
-# unique? foreign key? passwords?
-# class User(BaseModel):
-#     name: str
-#     username: str
-#     password: str
-
-
-# class IngredientCategory(BaseModel):
-#     name: str
-
-
-# class Ingredient(BaseModel):
-#     name: str
-#     category: IngredientCategory
+app = FastAPI()
 
 
 # models
+
+# unique? foreign key? passwords?
+class User(BaseModel):
+    name: str = Field(
+        min_length=1,
+        max_length=50,
+        example='Maru'
+    )
+    username: str = Field(
+        min_length=1,
+        max_length=50,
+        example='muwella'
+    )
+    password: str
+
+
+class IngredientCategory(Enum):
+    cereals = 'cereals'
+    fruits = 'fruits'
+    vegetables = 'vegetables'
+    dairy = 'dairy'
+    meat = 'meat'
+    fats = 'fats'
+    other = 'other'
+
+
+class Ingredient(BaseModel):
+    name: str = Field(
+        min_length=1,
+        max_length=50,
+        example='banana'
+    )
+    category: IngredientCategory = Field(
+        default=None,
+        example='fruit'
+    )
+
+
 
 class RecipeCategory(Enum):
     meal = 'meal'
@@ -39,6 +61,7 @@ class Recipe(BaseModel):
         max_length=50,
         example="Noodles"
         )
+    ingredients: List[Ingredient] = []
     # ingredients: list[Ingredient]
     steps: Optional[str] = Field(
         default=None,
@@ -65,25 +88,7 @@ class Location(BaseModel):
     country: str
 
 
-# HTTP operations
-
-''
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/recipes")
-def show_recipes(q: Union[str, None] = None):
-    return {"q": q}
-
-
-@app.get("/recipes/{recipe_id}")
-def show_recipe(recipe_id: int, q: Union[str, None] = None):
-    return {"recipe_id": recipe_id, "q": q}
-
-
-
+## apuntes ##
 
 # HTTP:
     # header
@@ -107,12 +112,27 @@ def show_recipe(recipe_id: int, q: Union[str, None] = None):
 # QUERY PARAMETERS -> optional
     # "path/users/{user_id}/details?age=21&height=159"
 
-
-
 # REQUEST & RESPONSE BODY
     # @app.post("/recipe/new")
     # def create_recipe(recipe: Recipe = Body()):
     #     return recipe
+
+
+# HTTP operations
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+
+@app.get("/recipes")
+def show_recipes(q: Union[str, None] = None):
+    return {"q": q}
+
+
+@app.get("/recipes/{recipe_id}")
+def show_recipe(recipe_id: int, q: Union[str, None] = None):
+    return {"recipe_id": recipe_id, "q": q}
 
 
 @app.post("/recipe/new")
