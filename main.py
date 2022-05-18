@@ -1,15 +1,14 @@
 #Python
-from lib2to3.pytree import Base
-from typing import Optional
+from typing import Optional, Union
+from enum import Enum
 #Pydantic
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, EmailStr
 #FastAPI
 from fastapi import FastAPI, Body, Query, Path
 
 app = FastAPI() # app is an instance of FastAPI
 
 
-# MODELS
 # unique? foreign key? passwords?
 # class User(BaseModel):
 #     name: str
@@ -26,15 +25,22 @@ app = FastAPI() # app is an instance of FastAPI
 #     category: IngredientCategory
 
 
-class RecipeCategory(BaseModel):
-    name: str
+# models
+
+class RecipeCategory(Enum):
+    meal = 'meal'
+    dessert = 'dessert'
 
 
 class Recipe(BaseModel):
-    title: str
+    name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+        )
     # ingredients: list[Ingredient]
-    steps: Optional[str] = None
-    category: RecipeCategory
+    steps: Optional[str] = Field(default=None)
+    category: Optional[RecipeCategory] = Field(default=None)
 
 
 class Location(BaseModel):
@@ -43,43 +49,58 @@ class Location(BaseModel):
     country: str
 
 
-# PATH OPERATION
-@app.get("/") # path operation decorator
-def home(): # path operation function
+# HTTP operations
+
+''
+@app.get("/")
+def read_root():
     return {"Hello": "World"}
 
-# una API transmite info por JSON
-# path/route/endpoint: lo que se agrega a la url del dominio
+
+@app.get("/recipes")
+def show_recipes(q: Union[str, None] = None):
+    return {"q": q}
+
+
+@app.get("/recipes/{recipe_id}")
+def show_recipe(recipe_id: int, q: Union[str, None] = None):
+    return {"recipe_id": recipe_id, "q": q}
+
+
+
 
 # HTTP:
     # header
     # body
     # operations
+        # operations principales:
+            # GET
+            # POST
+            # PUT
+            # DELETE
+        # operations más complejas
+            # OPTIONS
+            # HEAD
+            # PATCH
+            # TRACE
 
-    # operations principales:
-        # GET
-        # POST
-        # PUT
-        # DELETE
+# path/route/endpoint: lo que se agrega a la url del dominio
 
-    # operations más complejas
-        # OPTIONS
-        # HEAD
-        # PATCH
-        # TRACE
-
-
-# PATH PARAMETERS -> obligatory
-# "path/something/{recipe_id}"
-
-
+# PATH PARAMETERS -> mandatory
+    # "path/something/{recipe_id}"
 # QUERY PARAMETERS -> optional
-# "path/users/{user_id}/details?age=21&height=159"
+    # "path/users/{user_id}/details?age=21&height=159"
+
 
 
 # REQUEST & RESPONSE BODY
+    # @app.post("/recipe/new")
+    # def create_recipe(recipe: Recipe = Body()):
+    #     return recipe
+
+
 @app.post("/recipe/new")
-def create_recipe(recipe: Recipe = Body(...)):
+def create_recipe(recipe: Recipe = Body()):
     return recipe
 
 
@@ -87,7 +108,6 @@ def create_recipe(recipe: Recipe = Body(...)):
 @app.get("/recipe/detail")
 def show_recipe(
     title: str = Query(
-        ...,
         min_length=1,
         max_length=50,
         title='Recipe title',
@@ -128,29 +148,26 @@ def show_recipe(
 @app.get("/recipe/detail/{recipe_id}")
 def show_recipe(
     recipe_id: int = Path(
-        ...,
         gt=0,
-        title='Recipe title',
-        description='A recipe with steps'
+        title='Recipe',
+        description='Shows a recipe'
         )
-):
+    ):
     return {recipe_id: 'ok'}
 
 
 # VALIDATIONS - REQUEST BODY
-@app.put("/recipe/{recipe_id}") # actualizar (put)
+@app.put("/recipe/{recipe_id}")
 # el cliente tiene que enviar un REQUEST BODY a la API
 def update_recipe(
     recipe_id: int = Path(
-        ...,
-        title='Recipe ID',
-        description='This is the recipe ID',
+        title='Recipe',
+        description='Updates a recipe',
         gt=0
-    ),
-    recipe: Recipe = Body(...),
-    location: Location = Body(...)
-):
-    # devolver dos diccionarios en un único JSON
-    results = recipe.dict()
-    results.update(location.dict())
+        ),
+    recipe: Recipe = Body(),
+    ):
+    # return 2 dicts on 1 JSON
+    results = recipe_id.dict()
+    results.update(recipe.dict())
     return results
