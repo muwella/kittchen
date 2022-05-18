@@ -32,16 +32,32 @@ class RecipeCategory(Enum):
     dessert = 'dessert'
 
 
+# example parameter is for API testing 
 class Recipe(BaseModel):
     name: str = Field(
-        ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example="Noodles"
         )
     # ingredients: list[Ingredient]
-    steps: Optional[str] = Field(default=None)
-    category: Optional[RecipeCategory] = Field(default=None)
+    steps: Optional[str] = Field(
+        default=None,
+        example="Boil and eat"
+        )
+    category: Optional[RecipeCategory] = Field(
+        default=None,
+        example="meal"
+        )
 
+    # config class is for API testing
+    # class Config:
+    #     schema_extra = {
+    #         "example": {
+    #             "name": "Noodles",
+    #             "steps": "Boil and eat",
+    #             "category": 'meal'
+    #         }
+    #     }
 
 class Location(BaseModel):
     city: str
@@ -168,6 +184,6 @@ def update_recipe(
     recipe: Recipe = Body(),
     ):
     # return 2 dicts on 1 JSON
-    results = recipe_id.dict()
-    results.update(recipe.dict())
-    return results
+    # results = recipe_id.dict()
+    # results.update(recipe.dict())
+    return recipe
