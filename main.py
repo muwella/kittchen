@@ -1,19 +1,23 @@
 #Python
+import json
 from typing import Optional, Union, List
 from enum import Enum
 #Pydantic
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EnumError, EmailStr
 #FastAPI
-from fastapi import FastAPI, Body, Query, Path
+from fastapi import FastAPI
+from fastapi import Body, Query, Path, Cookie, status
 
 app = FastAPI()
 
+# WIP integrate SQL DB
 
 # models
 
-# unique? foreign key? passwords?
-class User(BaseModel):
-    name: str = Field(
+# WIP email field
+# WIP hash password (security)
+class UserBase(BaseModel):
+    nickname: str = Field(
         min_length=1,
         max_length=50,
         example='Maru'
@@ -23,7 +27,17 @@ class User(BaseModel):
         max_length=50,
         example='muwella'
     )
+    # email: EmailStr = Field(
+    #    regex="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+    #    )
+
+
+class User(UserBase):
     password: str
+
+
+class UserOut(UserBase):
+    pass
 
 
 class IngredientCategory(Enum):
@@ -33,7 +47,6 @@ class IngredientCategory(Enum):
     dairy = 'dairy'
     meat = 'meat'
     fats = 'fats'
-    other = 'other'
 
 
 class Ingredient(BaseModel):
@@ -48,62 +61,133 @@ class Ingredient(BaseModel):
     )
 
 
-
 class RecipeCategory(Enum):
     meal = 'meal'
     dessert = 'dessert'
 
 
-# example parameter is for API testing 
+# TBD tags, likes, comments
+# TBD modify recipes of others?
 class Recipe(BaseModel):
     name: str = Field(
         min_length=1,
         max_length=50,
         example="Noodles"
-        )
-    ingredients: List[Ingredient] = []
-    # ingredients: list[Ingredient]
+    )
+    ingredients: List[Ingredient] = Field(
+        default=[],
+        example=[1,2,3]
+    )
     steps: Optional[str] = Field(
         default=None,
-        example="Boil and eat"
-        )
+        example="Boil, eat, repeat"
+    )
     category: Optional[RecipeCategory] = Field(
         default=None,
         example="meal"
+    )
+
+
+# HTTP methods
+
+@app.get('/')
+def root():
+    return {"message": "hello world"}
+
+
+# show all recipes
+# TBD should i receive user_id to look for their recipes
+    # or use the token in the header? (is there a token in the GET header?)
+@app.get('/recipes')
+def show_recipes(
+    name: Union[str, None] = Query(default=None),
+    ingredients: Union[List[int], None] = Query(default=None),
+    category: Union[RecipeCategory, None] = Query(default=None)
+    ):
+    response = {
+        "name": name,
+        "ingredients": ingredients,
+        "category": category
+    }
+
+    return response
+
+
+@app.post('/recipes/new')
+def create_recipe(recipe: Recipe = Body()):
+    return recipe
+
+
+# recipe: shows the content
+    # (between the world and their embarrassing pavement ♫)
+@app.get('/recipes/{recipe_id}')
+def show_recipe(recipe_id: int = Path(
+        gt=0,
+        title='Recipe',
+        description='Shows a recipe'
         )
+    ):
+    return {"recipe_id": recipe_id}
 
-    # config class is for API testing
-    # class Config:
-    #     schema_extra = {
-    #         "example": {
-    #             "name": "Noodles",
-    #             "steps": "Boil and eat",
-    #             "category": 'meal'
-    #         }
-    #     }
 
-class Location(BaseModel):
-    city: str
-    state: str
-    country: str
+@app.put('/recipes/{recipe_id}/edit')
+def update_recipe(
+    recipe_id: int = Path(
+        title='Recipe',
+        description='Updates a recipe',
+        gt=0
+        ),
+    recipe: Recipe = Body(),
+    ):
+    return recipe
+
+
+# show all ingredients
+@app.get('/ingredients')
+def show_ingredients(
+    name: Union[str, None] = Query(default=None),
+    category: Union[IngredientCategory, None] = Query(default=None)
+    ):
+
+    response = {
+        "name": name,
+        "category": category
+    }
+
+    return response
+
+
+# db
+def db_ingredientes():
+    ing = [
+        Ingredient('Banana', IngredientCategory.fruit),
+        Ingredient('Peach', IngredientCategory.fruit),
+        Ingredient('Pear', IngredientCategory.fruit),
+        Ingredient('Apple', IngredientCategory.fruit),
+    ]
+
 
 
 ## apuntes ##
 
+# DUDAS
+# unique? foreign key? passwords?
+# integrate to DB? how to CRUD DB?
+# deploy on heroku
+
 # HTTP:
     # header
     # body
-    # operations
-        # operations principales:
-            # GET
-            # POST
-            # PUT
-            # DELETE
-        # operations más complejas
-            # OPTIONS
-            # HEAD
-            # PATCH
-            # TRACE
+    # methods / "operations"
+        # POST - create
+        # GET - read
+        # PUT- update
+        # DELETE - delete
+
+        # OPTIONS
+        # HEAD
+        # PATCH
+        # TRACE
 
 # path/route/endpoint: lo que se agrega a la url del dominio
 
@@ -117,53 +201,11 @@ class Location(BaseModel):
     # def create_recipe(recipe: Recipe = Body()):
     #     return recipe
 
-
-# HTTP operations
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/recipes")
-def show_recipes(q: Union[str, None] = None):
-    return {"q": q}
-
-
-@app.get("/recipes/{recipe_id}")
-def show_recipe(recipe_id: int, q: Union[str, None] = None):
-    return {"recipe_id": recipe_id, "q": q}
-
-
-@app.post("/recipe/new")
-def create_recipe(recipe: Recipe = Body()):
-    return recipe
-
-
-# VALIDATIONS - QUERY PARAMETERS
-@app.get("/recipe/detail")
-def show_recipe(
-    title: str = Query(
-        min_length=1,
-        max_length=50,
-        title='Recipe title',
-        description='A recipe with steps'
-        ),
-    steps: Optional[str] = Query(
-        None,
-        title='Recipe steps',
-        description="It explains how to do the recipe"
-        )
-    ):
-    return {title: steps}
-
-
 # Si necesito algo obligatorio es PATH PARAMETER
 # No QUERY PARAMETER
 # Puede pasar que lo necesite en algun caso
     # (un QUERY PARAMETER obligatorio)
     # Pero es raro, aunque se puede
-
 
 # VALIDATIONS - Parámetros
     # min_length
@@ -179,31 +221,32 @@ def show_recipe(
         # title
         # description
 
+# get.put: # el cliente tiene que enviar un REQUEST BODY a la API
 
-# VALIDATIONS - PATH PARAMETERS
-@app.get("/recipe/detail/{recipe_id}")
-def show_recipe(
-    recipe_id: int = Path(
-        gt=0,
-        title='Recipe',
-        description='Shows a recipe'
-        )
-    ):
-    return {recipe_id: 'ok'}
+# config class is for API testing
+# class Config:
+#     schema_extra = {
+#         "example": {
+#             "name": "Noodles",
+#             "steps": "Boil and eat",
+#             "category": 'meal'
+#         }
+#     }
 
+# example parameter is also for API testing
 
-# VALIDATIONS - REQUEST BODY
-@app.put("/recipe/{recipe_id}")
-# el cliente tiene que enviar un REQUEST BODY a la API
-def update_recipe(
-    recipe_id: int = Path(
-        title='Recipe',
-        description='Updates a recipe',
-        gt=0
-        ),
-    recipe: Recipe = Body(),
-    ):
-    # return 2 dicts on 1 JSON
+# return 2 dicts on 1 JSON (recipe_id & recipe)
     # results = recipe_id.dict()
     # results.update(recipe.dict())
-    return recipe
+    # return results
+
+# HTTP Status code
+    # 100 Information
+    # 200 OK
+        # 201 Created
+        # 204 No content
+    # 300 Redirect
+    # 400 Client error
+        # 404 No exists
+        # 422 Validation error
+    # 500 Internal Server Error

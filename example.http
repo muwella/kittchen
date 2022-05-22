@@ -1,0 +1,13 @@
+# GET http://127.0.0.1:8000/recipes?category=dessert&ingredients=12&ingredients=2
+# content-type: application/json
+# token: 1
+
+# POST http://127.0.0.1:8000/recipes/new
+# content-type: application/json
+# token: 1
+
+# {
+    
+# }
+
+GET http://127.0.0.1:8000/recipes/222
