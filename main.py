@@ -80,11 +80,11 @@ class Recipe(BaseModel):
         default=[],
         example=[1,2,3]
     )
-    steps: Optional[str] = Field(
+    steps: Union[str, None] = Field(
         default=None,
         example="Boil, eat, repeat"
     )
-    category: Optional[RecipeCategory] = Field(
+    category: Union[RecipeCategory, None] = Field(
         default=None,
         example="meal"
     )
