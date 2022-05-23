@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field, EnumError, EmailStr
 from fastapi import FastAPI
 from fastapi import Body, Query, Path, Cookie, status
 
-app = FastAPI()
-
+# LOOKUP fastapi routerAPI
+# LOOKUP FatSecret Platform API -> will most probably use it
 # WIP integrate SQL DB
+
+app = FastAPI()
 
 # models
 
@@ -95,31 +97,24 @@ def root():
     return {"message": "hello world"}
 
 
-# show all recipes
 # TBD should i receive user_id to look for their recipes
-    # or use the token in the header? (is there a token in the GET header?)
+    # or use a token? (is there a token in the GET header?)
 @app.get('/recipes')
 def show_recipes(
     name: Union[str, None] = Query(default=None),
     ingredients: Union[List[int], None] = Query(default=None),
     category: Union[RecipeCategory, None] = Query(default=None)
     ):
-    response = {
-        "name": name,
-        "ingredients": ingredients,
-        "category": category
-    }
 
-    return response
+    # look for recipes with query filters
+    return {'all': 'recipes'}
 
 
 @app.post('/recipes/new')
 def create_recipe(recipe: Recipe = Body()):
-    return recipe
+    return {'New recipe': recipe}
 
 
-# recipe: shows the content
-    # (between the world and their embarrassing pavement ♫)
 @app.get('/recipes/{recipe_id}')
 def show_recipe(recipe_id: int = Path(
         gt=0,
@@ -139,7 +134,8 @@ def update_recipe(
         ),
     recipe: Recipe = Body(),
     ):
-    return recipe
+    # edit recipe
+    return {recipe_id: recipe}
 
 
 # show all ingredients
@@ -149,12 +145,40 @@ def show_ingredients(
     category: Union[IngredientCategory, None] = Query(default=None)
     ):
 
-    response = {
-        "name": name,
-        "category": category
-    }
+    # look for ingredients with query filters
+    return {name: category}
 
-    return response
+
+@app.post('/ingredients/new')
+def create_ingredient(ingredient: Ingredient = Body()):
+    return {'new': 'ingredient'}
+
+
+@app.get('/ingredients/{ingredient_id}')
+def show_ingredient(
+    ingredient_id: int = Path(
+        gt=0,
+        title='Ingredient',
+        description='Shows an ingredient'
+        )
+    ):
+    return {"ingredient_id": ingredient_id}
+
+
+# TBD only if it's a custom ingredient?
+# NOTE if we use FatSecret API maybe we won't need to customize ingredients
+@app.put('/ingredients/{ingredient_id}/edit')
+def update_ingredient(
+    ingredient_id: int = Path(
+        title='Ingredient',
+        description='Updates an ingredient',
+        gt=0
+        ),
+    ingredient: Ingredient = Body(),
+    ):
+    # edit ingredient
+    return {ingredient_id: Ingredient}
+
 
 
 # db
