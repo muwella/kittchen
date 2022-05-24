@@ -4,6 +4,7 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 
+# LOOKUP should i use enum with int or str
 class IngredientCategory(Enum):
     cereals = 0
     fruits = 1

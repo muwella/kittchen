@@ -33,7 +33,7 @@ def show_recipes(
         min_length=1,
         max_length=50
         ),
-    ingredients: Union[List[int], None] = Query(
+    ing: Union[List[int], None] = Query(
         default=None,
         title="Ingredients",
         description="Ingredients used in the recipe"
@@ -48,7 +48,7 @@ def show_recipes(
     response = {
         'status': status.HTTP_200_OK,
         'name': name,
-        'ingredients': ingredients,
+        'ingredients': ing,
         'category': category
     }
 

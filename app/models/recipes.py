@@ -7,9 +7,9 @@ from pydantic import BaseModel, Field
 
 # LOOKUP could every user add elements to their own enum?
     # i don't think so
-class RecipeCategory(Enum):
-    meal = 0
-    dessert = 1
+class RecipeCategory(str, Enum):
+    meal = 'meal'
+    dessert = 'dessert'
 
 
 # TBD tags, likes, comments
