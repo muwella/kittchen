@@ -1,0 +1,7 @@
+POST http://127.0.0.1:8000/recipes/new
+content-type: application/json
+
+{
+    "name": "burger",
+    "ingredientes": [2, 4, 12]
+}
