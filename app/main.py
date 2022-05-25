@@ -29,26 +29,21 @@ def root():
 def show_recipes(
     name: Union[str, None] = Query(
         default=None,
-        title="Recipe's name",
         min_length=1,
         max_length=50
         ),
-    ing: Union[List[int], None] = Query(
+    ingredient: Union[List[int], None] = Query(
         default=None,
-        title="Ingredients",
-        description="Ingredients used in the recipe"
+        alias='ing'
         ),
-    category: Union[RecipeCategory, None] = Query(
-        default=None,
-        title="Recipe's category"
-        )
+    category: Union[RecipeCategory, None] = None
     ):
 
     # look for recipes with query filters
     response = {
         'status': status.HTTP_200_OK,
         'name': name,
-        'ingredients': ing,
+        'ingredients': ingredient,
         'category': category
     }
 
@@ -70,6 +65,8 @@ def show_recipe(recipe_id: int = Path(
     return {"recipe_id": recipe_id}
 
 
+# LOOKUP the user may click Update when in reality didn't
+    # change anything, so should I make Recipe optional?
 @app.put('/recipes/{recipe_id}/edit')
 def update_recipe(
     recipe_id: int = Path(
