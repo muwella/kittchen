@@ -10,11 +10,14 @@ class UserBase(BaseModel):
     email: EmailStr
 
 
-# WIP hash password (security)
 class UserIn(UserBase):
     password: str
 
 
+# WIP hashed password
+class UserInDB(UserBase):
+    hashed_password: str
+
+
 class UserOut(UserBase):
     pass
-
