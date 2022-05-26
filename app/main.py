@@ -3,17 +3,34 @@ from .models.users import UserInLogin, UserOut, UserInCreate
 from .models.ingredients import IngredientCategory, Ingredient
 from .models.recipes import RecipeCategory, Recipe
 #Python
-from typing import Union, List
+from uuid import UUID
+# from datetime import datetime, time, timedelta
+from typing import Union
 #FastAPI
 from fastapi import FastAPI
-from fastapi import Body, Query, Path, status
+from fastapi import Body, Query, Path, Header, Cookie
+from fastapi import status
 
 # LOOKUP fastapi routerAPI (use @router instead of @app)
 # LOOKUP FatSecret Platform API -> will most probably use it
+# LOOKUP: Path, Query, Header, Cookie, Body, Form, File, Field
 # WIP integrate SQL DB
 
-app = FastAPI()
+# NOTE with attribute example I can add an invalid
+    # example that I know will fail, to test? i guess
+    # Would be better actually testing tho
+    # BUT! it's good for documentation
 
+# LOOKUP frozenset
+# LOOKUP user-agent, HTTP proxies
+
+# NOTE I can declare with which model I'm responding
+    # with @app.smth('', response_model=MyModel)
+    # probably CREATE and POST
+    # could also be =list, or anything
+    # it gets documented
+
+app = FastAPI()
 
 
 # HTTP methods
@@ -32,7 +49,7 @@ def show_recipes(
         min_length=1,
         max_length=50
         ),
-    ingredient: Union[List[int], None] = Query(
+    ingredient: Union[list[int], None] = Query(
         default=None,
         alias='ing'
         ),
@@ -50,6 +67,8 @@ def show_recipes(
     return response
 
 
+# NOTE cuando recibo un JSON de receta, si tiene la exacta
+    # estructura de mi modelo Recipe, se valida como Recipe?
 @app.post('/recipes/new')
 def create_recipe(recipe: Recipe):
     return {'all': 'received'}
