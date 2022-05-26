@@ -1,5 +1,5 @@
 #app
-from .models.users import UserInLogin, UserOut, UserInCreate
+from .models.users import UserIn, UserOut
 from .models.ingredients import IngredientCategory, Ingredient
 from .models.recipes import RecipeCategory, Recipe
 #Python
