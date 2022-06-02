@@ -1,4 +1,5 @@
 #app
+import dependencies as dp # NOTE later this will be on other file
 from .models.users import UserIn, UserInDB, UserOut
 from .models.ingredients import IngredientCategory, Ingredient
 from .models.recipes import RecipeCategory, Recipe
@@ -8,7 +9,7 @@ from uuid import UUID
 from typing import Union
 #FastAPI
 from fastapi import FastAPI
-from fastapi import Body, Query, Path, Form, Header, Cookie
+from fastapi import Body, Query, Path, Form, Header, Cookie, File
 from fastapi import status
 
 # LOOKUP fastapi routerAPI (use @router instead of @app)
@@ -45,7 +46,7 @@ def root():
 
 ### USER
 
-@app.post('/users/new')
+@app.post('/user/new')
 def create_user(user_in: UserIn):
     # hash password
     hashed_password = 'hashed' + user_in.password
@@ -58,7 +59,31 @@ def create_user(user_in: UserIn):
 
 
 
+# DOUBT do i get IDs as simple int? Or as smth else
+    # also i should verify the user's token? i think
+@app.get('user/profile/me')
+def read_user_me(user_id: int):
+    return dp.get_user(user_id)
+
+
+@app.get('user/profile/{user_id}')
+def read_user(user_id: int = Path(gt=0)):
+    return dp.get_user(user_id)
+
+
+# WIP check for unique username in DB
+# also password & confirmation (new) email to change email
+@app.put('user/profile/{user_id}/edit')
+def update_profile(
+    user_id: int = Path(gt=0),
+    user_update: UserIn = Body()
+    ):
+    return {}
+
+
+
 ### LOGIN
+
 
 @app.post('/login')
 def login(
@@ -68,6 +93,7 @@ def login(
     # check for username in DB
     # verify username and password match
     return {'nickname': username}
+
 
 
 ### RECIPES
@@ -102,6 +128,7 @@ def show_recipes(
 # DOUBT que pasa si no recibo algo que entre dentro del modelo Recipe?
 # WIP advanced user guide: return status code
     # other from the default
+# WIP should be able to add an image to a recipe
 @app.post('/recipes/new', status_code=status.HTTP_201_CREATED)
 def create_recipe(recipe: Recipe):
     return {'all': 'received'}
