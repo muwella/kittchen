@@ -101,3 +101,12 @@
 # instead of
     # application/json.
 # This is part of the HTTP protocol.
+
+
+# HANDLING ERRORS
+# possible errors:
+# - the client doesn't have enough privileges for that operation
+# - the client doesn't have access to that resource
+# - the item the client was trying to access doesn't exist
+
+# normaly, you responde with 400s HTTP status code (400 to 499)
