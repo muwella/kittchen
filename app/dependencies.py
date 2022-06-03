@@ -1,5 +1,7 @@
+from .models.users import UserOut
+
 # WIP get user from DB
-def get_user(user_id) -> dict:
+def get_user(user_id) -> UserOut:
     return {'user': 'from DB'}
 
 
