@@ -103,6 +103,19 @@
 # This is part of the HTTP protocol.
 
 
+# NOTE with attribute example I can add an invalid
+    # example that I know will fail, to test? i guess
+    # Would be better actually testing tho
+    # BUT! it's good for documentation
+
+
+# NOTE I can declare with which model I'm responding
+    # with @app.smth('', response_model=MyModel)
+    # probably CREATE and POST
+    # could also be =list, or anything
+    # it gets documented
+
+
 # HANDLING ERRORS
 # possible errors:
 # - the client doesn't have enough privileges for that operation
