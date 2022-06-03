@@ -9,8 +9,9 @@ from uuid import UUID
 from typing import Union
 #FastAPI
 from fastapi import FastAPI
+from fastapi import Depends
 from fastapi import Body, Query, Path, Form, Header, Cookie, File
-from fastapi import status
+from fastapi import status, HTTPException
 
 # LOOKUP fastapi routerAPI (use @router instead of @app)
 # LOOKUP FatSecret Platform API -> will most probably use it
@@ -33,12 +34,13 @@ from fastapi import status
 
 app = FastAPI()
 
+placeholder_list = ['foo', 'bar']
 
 # HTTP methods
 
 ### ROOT
 
-@app.get('/')
+@app.get('/', status_code=status.HTTP_200_OK)
 def root():
     return {"message": "hello world"}
 
@@ -46,7 +48,7 @@ def root():
 
 ### USER
 
-@app.post('/user/new')
+@app.post('/user/new', status_code=status.HTTP_201_CREATED)
 def create_user(user_in: UserIn):
     # hash password
     hashed_password = 'hashed' + user_in.password
@@ -61,13 +63,15 @@ def create_user(user_in: UserIn):
 
 # DOUBT do i get IDs as simple int? Or as smth else
     # also i should verify the user's token? i think
-@app.get('user/profile/me')
+@app.get('user/profile/me', response_model=UserOut, status_code=status.HTTP_200_OK)
 def read_user_me(user_id: int):
     return dp.get_user(user_id)
 
 
 @app.get('user/profile/{user_id}')
 def read_user(user_id: int = Path(gt=0)):
+    if user_id not in placeholder_list:
+        raise HTTPException(status_code=404, detail='User not found')
     return dp.get_user(user_id)
 
 
