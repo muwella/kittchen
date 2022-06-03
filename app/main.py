@@ -13,24 +13,13 @@ from fastapi import Depends
 from fastapi import Body, Query, Path, Form, Header, Cookie, File
 from fastapi import status, HTTPException
 
-# LOOKUP fastapi routerAPI (use @router instead of @app)
-# LOOKUP FatSecret Platform API -> will most probably use it
-# LOOKUP: Path, Query, Header, Cookie, Body, Form, File, Field
-# WIP integrate SQL DB
+# LOOKUP
+# fastapi routerAPI (use @router instead of @app)
+# FatSecret Platform API -> will most probably use it
+# frozenset
+# user-agent, HTTP proxies
 
-# NOTE with attribute example I can add an invalid
-    # example that I know will fail, to test? i guess
-    # Would be better actually testing tho
-    # BUT! it's good for documentation
-
-# LOOKUP frozenset
-# LOOKUP user-agent, HTTP proxies
-
-# NOTE I can declare with which model I'm responding
-    # with @app.smth('', response_model=MyModel)
-    # probably CREATE and POST
-    # could also be =list, or anything
-    # it gets documented
+# WIP separate each type of routing to it's specific route file
 
 app = FastAPI()
 
