@@ -1,5 +1,5 @@
 #app
-import dependencies as dp # NOTE later this will be on other file
+from .resources import dependencies as dp # NOTE later this will be on other file
 from .models.users import UserIn, UserInDB, UserOut
 from .models.ingredients import IngredientCategory, Ingredient
 from .models.recipes import RecipeCategory, Recipe
