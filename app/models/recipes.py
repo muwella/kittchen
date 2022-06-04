@@ -15,7 +15,9 @@ from .users import UserInDB
 # and if i do, should i have RecipeCategory as an Enum
     # and RecipeCustomCategory as another table for users?
 
+
 class RecipeCategory(Base):
+    id = Column(Integer, primary_key=True, index=True)
     __tablename__ = 'recipe categories'
 
 
@@ -28,4 +30,4 @@ class Recipe(Base):
     owner_id = Column(Integer, ForeignKey('users.id'))
     
     owner = relationship('UserInDB', back_populates='recipes')
-    category = relationship()
+    # category = relationship()
