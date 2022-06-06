@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 
 
-class RecipeCategory(BaseModel):
+class RecipeCategoryOut(BaseModel):
     pass
 
 # WIP add meal and dessert to RecipeCategory
@@ -17,11 +17,11 @@ class RecipeCategory(BaseModel):
 # LOOKUP ingredients = list[Ingredient.id] ? smth like that
     # or look up the int in DB and check if there's an ingredient with that ID
     # maybe i'll be able to connect them when i see DB management
-class Recipe(BaseModel):
+class RecipeOut(BaseModel):
     name: str = Field(min_length=1, max_length=50)
     ingredients: list[int] = set()
     steps: Union[str, None] = Field(default=None)
-    category: Union[RecipeCategory, None] = Field(default=None)
+    category: Union[RecipeCategoryOut, None] = Field(default=None)
 
     # LOOKUP using schema_extra to add metatada for a frontend user interface
     class Config:
