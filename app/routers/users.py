@@ -13,7 +13,7 @@ router = APIRouter(
     prefix='/user',
     dependencies=[Depends(get_user)],
     tags=['users']
-    #responses={404: {"description": "Not found"}}
+    # responses={404: {"description": "Not found"}}
 )
 
 
