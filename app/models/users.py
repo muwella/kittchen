@@ -1,5 +1,5 @@
 # SQLite
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import relationship
 
 from ..database.database import Base
@@ -10,6 +10,7 @@ from ..database.database import Base
 # SQLAlchemy models
 
 # WIP hashed password
+# WIP relationships
 class UserInDB(Base):
     __tablename__ = 'users'
     
@@ -20,4 +21,4 @@ class UserInDB(Base):
     is_active = Column('is active', Boolean, default=True)
     hashed_password: Column('password', String)
 
-    recipes = relationship('Recipe', back_populates='creator')
+    # recipes = relationship('Recipe', back_populates='creator')
