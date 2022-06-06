@@ -8,9 +8,7 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///./kittchen.db"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 # and adapt it to my DB and credentials
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 # the argument 'connect_args={"check_same_thread": False}'
     # is needed only for SQLite, not other DBs
 
