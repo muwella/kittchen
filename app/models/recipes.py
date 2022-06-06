@@ -1,33 +1,36 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, column
+from sqlalchemy.orm import relationship # LOOKUP relationship
 
 from ..database.database import Base
 
-# DOUBT do i need to access UserInDB in Recipe?
-from .users import UserInDB
+from .ingredients import Ingredient
 
+# SQLAlchemy models
 
-# TBD should make:
-# - a Recipe model
-# - a RecipeCategory model
-# - and a RecipeCustomCategory model?
-
-# and if i do, should i have RecipeCategory as an Enum
-    # and RecipeCustomCategory as another table for users?
-
-
+# WIP create my own categories that i'll
+    # share with every user
+# created by me and by users
 class RecipeCategory(Base):
+    __tablename__ = 'recipe_categories'
+
     id = Column(Integer, primary_key=True, index=True)
-    __tablename__ = 'recipe categories'
+    name = Column(String)
+
+    creator_id = Column('creator', Integer, ForeignKey('users.id'))
 
 
+# DOUBT is it list(Ingredient) legal? should be
+# ANSWER no haha
 class Recipe(Base):
     __tablename__ = 'recipes'
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
+    name = Column(String)
+    ingredients = Column(list(Ingredient))
     steps = Column(String)
-    owner_id = Column(Integer, ForeignKey('users.id'))
-    
-    owner = relationship('UserInDB', back_populates='recipes')
-    # category = relationship()
+
+    creator_id = Column('creator', Integer, ForeignKey('users.id'))
+    category_id = Column('category', Integer, ForeignKey('recipe_categories.id'))
+
+    creator = relationship('UserInDB', back_populates='recipes')
+    # category = relationship('RecipeCategory', back_populates='category')
