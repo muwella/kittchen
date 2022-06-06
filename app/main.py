@@ -6,11 +6,13 @@ from .routers import login, users, recipes, ingredients
 # LOOKUP
 # user-agent, HTTP proxy, middleware
 
-# FIXME some issue with models and schemas in recipes
+# FIXME use Schemas in routes instead of DB Models
+
+# WIP relationships
 
 app = FastAPI()
 
 app.include_router(login.router)
 app.include_router(users.router)
 app.include_router(recipes.router)
-# app.include_router(ingredients.router)
+app.include_router(ingredients.router)
