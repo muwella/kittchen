@@ -1,19 +1,18 @@
 #Python
 from typing import Union
-from enum import Enum
 #Pydantic
 from pydantic import BaseModel, Field
 
 
-# LOOKUP could every user add elements to their own enum?
-    # i don't think so
-class RecipeCategory(str, Enum):
-    meal = 'meal'
-    dessert = 'dessert'
 
+class RecipeCategory(BaseModel):
+    pass
+
+# WIP add meal and dessert to RecipeCategory
 
 # TBD tags, likes, comments
-# TBD modify recipes of others?
+
+
 
 # LOOKUP ingredients = list[Ingredient.id] ? smth like that
     # or look up the int in DB and check if there's an ingredient with that ID
