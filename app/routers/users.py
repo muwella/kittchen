@@ -4,14 +4,15 @@ from fastapi import Body, Path
 from fastapi import status, HTTPException
 # models
 from ..models.users import UserInDB
-from ..schemas.users import UserIn, UserOut
+from ..schemas.users import UserInCreate, UserInResponse
 # dependencies
-from ..resources.dependencies import get_user
+from ..resources import dependencies as dp
 
 
+# WIP dependencies
 router = APIRouter(
     prefix='/user',
-    dependencies=[Depends(get_user)],
+    dependencies=[Depends(dp.get_user_by_id)],
     tags=['users']
     # responses={404: {"description": "Not found"}}
 )
@@ -21,7 +22,7 @@ placeholder_list = ['foo', 'bar']
 
 
 @router.post('/new', status_code=status.HTTP_201_CREATED)
-def create_user(user_in: UserIn):
+def create_user(user_in: UserInCreate):
     # hash password
     hashed_password = 'hashed' + user_in.password
     # save user in DB
@@ -34,7 +35,7 @@ def create_user(user_in: UserIn):
 
 # DOUBT do i get IDs as simple int? Or as smth else
     # also i should verify the user's token? i think
-@router.get('/profile/me', response_model=UserOut, status_code=status.HTTP_200_OK)
+@router.get('/profile/me', response_model=UserInResponse, status_code=status.HTTP_200_OK)
 def get_user_me(user_id: int):
     return get_user(user_id)
 
@@ -47,7 +48,7 @@ def get_user(user_id: int = Path(gt=0)):
 
 
 # WIP check for unique username in DB
-# also password & confirmation (new) email to change email
+    # also password & confirmation (new) email to change email
 @router.put('/profile/me/edit')
-def update_user(user_update: UserIn = Body()):
+def update_user(user_update: UserInCreate = Body()):
     return {}

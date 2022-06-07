@@ -17,16 +17,19 @@ class RecipeCategory(Base):
     creator_id = Column('creator', Integer, ForeignKey('users.id'))
 
 
+# FIXME ingredients as list of ingredients, how
+# maybe Ingredient should have ForeignKey to Recipe
+# and Recipe not have ingredients
 class Recipe(Base):
     __tablename__ = 'recipes'
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
-    # ingredients = Column(list(Ingredient))
+    # ingredients = Column(String)
     steps = Column(String)
 
     creator_id = Column('creator', Integer, ForeignKey('users.id'))
     category_id = Column('category', Integer, ForeignKey('recipe_categories.id'))
 
-    # creator = relationship('UserInDB', back_populates='recipes')
+    creator = relationship('UserInDB', back_populates='recipes')
     # category = relationship('RecipeCategory', back_populates='category')

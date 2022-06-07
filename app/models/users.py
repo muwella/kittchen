@@ -15,10 +15,13 @@ class UserInDB(Base):
     __tablename__ = 'users'
     
     id = Column('id', Integer, primary_key=True, index=True)
+    
     username = Column('username', String(128), unique=True)
     nickname: Column('nickname', String(128))
     email: Column('email', String(512), unique=True, index=True)
-    is_active = Column('is active', Boolean, default=True)
     hashed_password: Column('password', String)
-
-    # recipes = relationship('Recipe', back_populates='creator')
+    
+    is_active = Column('is active', Boolean, default=True)
+    token: str
+    
+    recipes = relationship('Recipe', back_populates='creator')
