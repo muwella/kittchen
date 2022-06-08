@@ -21,7 +21,7 @@ class IngredientCategory(Base):
 
 
 
-class Ingredient(Base):
+class IngredientInDB(Base):
     __tablename__ = 'ingredients'
 
     id = Column(Integer, primary_key=True, index=True)
