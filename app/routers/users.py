@@ -5,24 +5,35 @@ from fastapi import status, HTTPException
 # models
 from ..models.users import UserInDB
 from ..schemas.users import UserInCreate, UserInResponse
-# dependencies
-from ..resources import dependencies as dp
+# SQLAlchemy
+from sqlalchemy.orm import Session
+# utils & dependencies
+from ..utils import utils, dependencies as dp 
 
+placeholder_list = ['foo', 'bar']
 
-# WIP dependencies
+# LOOKUP dependencies
+
 router = APIRouter(
     prefix='/user',
-    dependencies=[Depends(dp.get_user_by_id)],
-    tags=['users']
+    dependencies=[
+        Depends(utils.get_user_by_id),
+        Depends(dp.get_db)
+    ],
+    # tags=['users']
     # responses={404: {"description": "Not found"}}
 )
 
 
-placeholder_list = ['foo', 'bar']
-
-
-# @router.post('/new', status_code=status.HTTP_201_CREATED)
-# def create_user(user_in: UserInCreate):
+# FIXME error with Session, no validator found
+# @router.post(
+#     '/new',
+#     response_model=UserInResponse,
+#     status_code=status.HTTP_201_CREATED)
+# def create_user(
+#     user_in: UserInCreate,
+#     db: Session = Depends(dp.get_db)
+#     ):
 #     # hash password
 #     hashed_password = 'hashed' + user_in.password
 #     # save user in DB
