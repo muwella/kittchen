@@ -23,7 +23,7 @@ class RecipeInDB(Base):
     name = Column(String)
     steps = Column(String, default='')
     creator_id = Column('creator', Integer, ForeignKey('users.id'))
-    # category_id = Column('category', Integer, ForeignKey('recipe_categories.id'))
+    category_id = Column('category', Integer, ForeignKey('recipe_categories.id'))
 
     creator = relationship('UserInDB', back_populates='recipes')
     # category = relationship('RecipeCategory', back_populates='category')
