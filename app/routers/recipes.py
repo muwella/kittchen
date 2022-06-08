@@ -5,7 +5,7 @@ from fastapi import APIRouter
 from fastapi import Query, Path, Body
 from fastapi import status
 # models
-from ..models.recipes import Recipe, RecipeCategory
+from ..models.recipes import RecipeInDB, RecipeCategory
 # dependencies
 
 
