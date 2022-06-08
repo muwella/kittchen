@@ -10,18 +10,16 @@ from ..database.database import Base
 # SQLAlchemy models
 
 # WIP hashed password
-# WIP relationships
 class UserInDB(Base):
     __tablename__ = 'users'
     
-    id = Column('id', Integer, primary_key=True, index=True)
-    
-    username = Column('username', String(128), unique=True)
-    nickname: Column('nickname', String(128))
-    email: Column('email', String(512), unique=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True)
+    email: Column(String, unique=True, index=True)
+    nickname: Column(String)
     hashed_password: Column('password', String)
+    is_active = Column(Boolean, default=True)
     
-    is_active = Column('is active', Boolean, default=True)
-    token: str
+    # token: str
     
-    recipes = relationship('Recipe', back_populates='creator')
+    recipes = relationship('RecipeInDB', back_populates='creator')
