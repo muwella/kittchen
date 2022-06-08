@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from ..models.users import UserInDB
 from ..schemas.users import UserInResponse, UserInCreate
 
-from ..models.recipes import Recipe, RecipeCategory
+from ..models.recipes import RecipeInDB, RecipeCategory
 from ..schemas.recipes import RecipeInResponse, RecipeInCreate
 
 
@@ -35,4 +35,4 @@ def get_recipe_by_id(db: Session, recipe_id: int):
 
 
 def create_recipe(db: Session, recipe: RecipeInCreate):
-    db_recipe = Recipe()
+    db_recipe = RecipeInDB()
