@@ -1,40 +1,60 @@
 #Python
+from enum import Enum
 from typing import Union
 #Pydantic
 from pydantic import BaseModel, Field
 
 # WIP add meal and dessert to RecipeCategory
-# TBD tags, likes, comments
+
+# received from user
+class RecipeCategoryBase(Enum):
+    name: str
 
 
-class RecipeCategoryInResponse(BaseModel):
-    pass
+# sent to user
+class RecipeCategory(RecipeCategoryBase):
+    id: int
 
-
-class RecipeBase(BaseModel):
-    name: str = Field(min_length=1, max_length=50)
-    ingredients: list[int] = set()
-    steps: Union[str, None] = Field(default=None)
-    category: Union[RecipeCategoryInResponse, None] = Field(default=None)
-
-    # LOOKUP using schema_extra to add metatada for a frontend user interface
     class Config:
         orm_mode = True
-        # schema_extra = {
-        #     "example": {
-        #         # "token": token,
-        #         "name": "Noodles",
-        #         "ingredients": [1, 2, 3],
-        #         "steps": "Boil, eat, repeat",
-        #         "category": "meal"
-        #     }
-        # }
+
+
+# received from user
+class RecipeBase(BaseModel):
+    name: str
+    ingredients: list[int] = set()
+    steps: Union[str, None] = Field(default=None)
+    category: RecipeCategoryBase
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Noodles",
+                "ingredients": [1, 2, 3],
+                "steps": "Boil, eat, repeat",
+                "category": "0"
+            }
+        }
+
+
+# sent to user
+class Recipe(RecipeBase):
+    id: int
+
+    class Config:
+        orm_mode = True
 
 
 class RecipeInCreate(RecipeBase):
     pass
 
 
-class RecipeInResponse(BaseModel):
+class RecipeInResponse(Recipe):
     pass
 
+
+class RecipeInUpdate(RecipeBase):
+    name: Union[str, None] = Field(default=None)
+    ingredients: Union[list[int], None] = Field(default=None)
+    steps: Union[str, None] = Field(default=None)
+    category: Union[RecipeCategoryBase, None] = Field(default=None)
