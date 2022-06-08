@@ -22,7 +22,6 @@ class RecipeCategory(RecipeCategoryBase):
 # received from user
 class RecipeBase(BaseModel):
     name: str
-    ingredients: list[int] = set()
     steps: Union[str, None] = Field(default=None)
     category: RecipeCategoryBase
 
