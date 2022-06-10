@@ -5,14 +5,12 @@
 from fastapi import FastAPI
 from .routers import users, recipes, login, ingredients
 
-from .database.database import SessionLocal, engine
+from .database.database import engine
 
 # NOTE find a better way to import this
 from .models.users import Base
 
-
 Base.metadata.create_all(bind=engine)
-
 
 app = FastAPI()
 
