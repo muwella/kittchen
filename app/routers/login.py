@@ -1,8 +1,9 @@
 # FastAPI
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi import Form
 # models
 # dependencies
+# from ..utils.dependencies import oauth2_scheme
 
 router = APIRouter(
     prefix='/login',
@@ -12,11 +13,12 @@ router = APIRouter(
 ### LOGIN
 
 
-@router.post('/')
-def login(
-    username: str = Form(),
-    password: str = Form()
-):
-    # check for username in DB
-    # verify username and password match
-    return {'nickname': username}
+# @router.post('/')
+# def login(
+#     token: str = Depends(oauth2_scheme)
+#     # username: str = Form(),
+#     # password: str = Form()
+# ):
+#     # check for username in DB
+#     # verify username and password match
+#     return {'ok': 'ok'}
