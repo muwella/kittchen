@@ -9,6 +9,7 @@ from ..schemas.users import UserInCreate, UserInResponse
 from sqlalchemy.orm import Session
 # utils & dependencies
 from ..utils.dependencies import get_db, verify_token#, oauth2_scheme
+from ..utils.security import oauth2_scheme
 
 placeholder_list = ['foo', 'bar']
 
@@ -16,7 +17,7 @@ placeholder_list = ['foo', 'bar']
 # NOTE i can import dependencies that
     # are gonna be used by every endpoint
 router = APIRouter(
-    prefix='/user',
+    prefix = '/user',
     # dependencies=[
     #     Depends(utils.get_user_by_id),
     #     Depends(dp.get_db)
@@ -26,20 +27,19 @@ router = APIRouter(
 )
 
 
-# NOTE i can just write db = Depends(get_db)
-    # instead of db: Session = Depends(get_db)
-# NOTE using dependencies = [Depends(...),...]
+# NOTE i can just write 'db = Depends(get_db)'
+    # instead of 'db: Session = Depends(get_db)'
+# NOTE using 'dependencies = [Depends(...),...]'
     # it doesn't return anything (as in db)
 @router.post(
     '/new',
-    response_model=UserInResponse,
-    status_code=status.HTTP_201_CREATED,
+    response_model = UserInResponse,
+    status_code = status.HTTP_201_CREATED,
     dependencies = [Depends(verify_token)]
     )
 def create_user(
     user_in: UserInCreate,
     db = Depends(get_db),
-    # token = Depends(oauth2_scheme)
     ):
     # hash password
     hashed_password = 'hashed' + user_in.password
@@ -53,9 +53,13 @@ def create_user(
 
 # DOUBT do i get IDs as simple int? Or as smth else
     # also i should verify the user's token? i think
-# @router.get('/profile/me', response_model=UserInResponse, status_code=status.HTTP_200_OK)
-# def get_user_me(user_id: int):
-#     return get_user(user_id)
+@router.get(
+    '/profile/me',
+    response_model = UserInResponse,
+     status_code = status.HTTP_200_OK
+     )
+def get_user_me(token: str = Depends(oauth2_scheme)):
+    return {'testing': 'oauth2'}
 
 
 # @router.get('/profile/{user_id}')
