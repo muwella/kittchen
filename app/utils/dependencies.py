@@ -1,7 +1,6 @@
 # database
 from ..database.database import SessionLocal
 from fastapi import Header, HTTPException
-# from fastapi.security import OAuth2PasswordBearer
 
 # dependencies are functions that give certain endpoints
     # certain things that they need
@@ -15,9 +14,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-# oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 
 # WIP fake token
