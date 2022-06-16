@@ -6,22 +6,21 @@ from fastapi import status, HTTPException
 from ..models.users import UserInDB
 from ..schemas.users import UserInCreate, UserInResponse
 # SQLAlchemy
-from sqlalchemy.orm import Session
+# from sqlalchemy.orm import Session
 # utils & dependencies
-from ..utils.dependencies import get_db, verify_token#, oauth2_scheme
+from ..utils.users import *
+from ..utils.dependencies import verify_token
 from ..utils.security import oauth2_scheme
 
 placeholder_list = ['foo', 'bar']
 
+# WIP divide dependencies by users, ingredients, recipes, etc.
 
 # NOTE i can import dependencies that
     # are gonna be used by every endpoint
 router = APIRouter(
     prefix = '/user',
-    # dependencies=[
-    #     Depends(utils.get_user_by_id),
-    #     Depends(dp.get_db)
-    # ],
+    dependencies=[Depends(verify_token)],
     # tags=['users']
     # responses={404: {"description": "Not found"}}
 )
@@ -34,12 +33,10 @@ router = APIRouter(
 @router.post(
     '/new',
     response_model = UserInResponse,
-    status_code = status.HTTP_201_CREATED,
-    dependencies = [Depends(verify_token)]
+    status_code = status.HTTP_201_CREATED
     )
 def create_user(
     user_in: UserInCreate,
-    db = Depends(get_db),
     ):
     # hash password
     hashed_password = 'hashed' + user_in.password
@@ -51,13 +48,13 @@ def create_user(
     return {'user in DB': user_in_db}
 
 
-# DOUBT do i get IDs as simple int? Or as smth else
-    # also i should verify the user's token? i think
+# DOUBT do i get ID as a simple int? Or as smth else
 @router.get(
     '/profile/me',
     response_model = UserInResponse,
-     status_code = status.HTTP_200_OK
-     )
+    status_code = status.HTTP_200_OK,
+    dependencies = [Depends(verify_token)]
+    )
 def get_user_me(token: str = Depends(oauth2_scheme)):
     return {'testing': 'oauth2'}
 
