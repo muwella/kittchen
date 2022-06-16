@@ -1,7 +1,9 @@
-POST http://127.0.0.1:8000/recipes/new
+POST http://127.0.0.1:8000/user/new
 content-type: application/json
 
 {
-    "name": "burger",
-    "ingredientes": [2, 4, 12]
+    "email": "marielabrascon@gmail.com",
+    "nickname": "Maru",
+    "password": "superStrong"
 }
+

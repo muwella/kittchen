@@ -123,3 +123,13 @@
 # - the item the client was trying to access doesn't exist
 
 # normaly, you responde with 400s HTTP status code (400 to 499)
+
+
+# NOTE using 'dependencies = [Depends(...),...]'
+    # it doesn't return anything (as in db)
+    # (on path operation functions)
+
+# NOTE to save an user in DB
+    # .dict() unwraps the pydantic model UserInCreate and
+    # allows us to fill another model with the data
+    # in this case, it fills up UserInDB

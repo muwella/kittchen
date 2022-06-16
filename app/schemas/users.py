@@ -8,14 +8,12 @@ from ..schemas.recipes import RecipeInResponse
 
 # received from user
 class UserBase(BaseModel):
-    username: str
+    email: str
     nickname: str
-    email: EmailStr
 
     class Config:
         schema_extra = {
             'example': {
-                'username': 'muwella',
                 'nickname': 'Maru',
                 'email': 'marielabrascon@gmail.com'
             }
@@ -26,7 +24,7 @@ class UserBase(BaseModel):
 class User(UserBase):
     id: int
     is_active: bool
-    recipes: list[RecipeInResponse] = []
+    # recipes: list[RecipeInResponse] = []
 
     class Config:
         # orm_mode is to make the Pydantic model compatible
@@ -35,9 +33,10 @@ class User(UserBase):
         orm_mode = True
         schema_extra = {
             'example': {
-                'username': 'muwella',
                 'nickname': 'Maru',
-                'email': 'marielabrascon@gmail.com'
+                'email': 'marielabrascon@gmail.com',
+                'id': 1,
+                'is_active': True
             }
         }
 
@@ -48,9 +47,8 @@ class UserInCreate(UserBase):
     class Config:
         schema_extra = {
             'example': {
-                'username': 'muwella',
-                'nickname': 'Maru',
                 'email': 'marielabrascon@gmail.com',
+                'nickname': 'Maru',
                 'password': 'bigTime'
             }
         }
@@ -61,7 +59,6 @@ class UserInResponse(User):
 
 
 class UserInUpdate(BaseModel):
-    username: Union[str, None] = Field(default=None)
     nickname: Union[str, None] = Field(default=None)
     email: Union[EmailStr, None] = Field(default=None)
     password: Union[str, None] = Field(default=None)
