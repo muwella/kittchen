@@ -21,6 +21,7 @@ class UserBase(BaseModel):
 
 
 # sent to user
+# in the Pydantic model for reading, add orm_mode = True
 class User(UserBase):
     id: int
     is_active: bool

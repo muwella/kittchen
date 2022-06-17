@@ -1,5 +1,7 @@
 # SQLAlchemy
+from sqlite3 import IntegrityError
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import exists
 # fastapi
 from fastapi import Depends
 # models
@@ -8,51 +10,46 @@ from ..schemas.users import UserInCreate
 # db
 from ..utils.dependencies import get_db
 
-# NOTE i can just write 'db = Depends(get_db)'
-    # instead of 'db: Session = Depends(get_db)'
+
+# WIP test
+def verify_email_exists(email: str, db: Session):
+    return db.query(UserInDB.query.filter(UserInDB.email == email).exists()).scalar()
 
 
-def verify_email_exists():
-    pass
+def verify_login_match(email: str, password: str, db: Session):
+    user = get_user_by_email(email, db)
+    
+    # WIP encripted password
+    db_password = user.hashed_password
 
+    return password == db_password
+    
 
-def verify_email_password_match():
-    pass
-
-
-def get_user_by_id(
-    db: Session,
-    user_id: int
-    ):
+# WIP raise exception: the user doesn't exist
+def get_user_by_id(user_id: int, db: Session):
     return db.query(UserInDB).filter(UserInDB.id == user_id).first()
 
 
-def get_user_by_email(
-    db: Session,
-    email: str
-    ):
+# WIP raise exception: the user doesn't exist
+def get_user_by_email(email: str, db: Session) -> UserInDB:
     return db.query(UserInDB).filter(UserInDB.email == email).first()
 
 
+# WIP raise exception: email is already in use
 def save_user(user: UserInCreate, db: Session):
     hashed_password = 'hashed_' + user.password
 
-    # DOUBT does .dict excludes password by itself?
-        # because there's no password field on UserInDB
     user_in_db = UserInDB(
         **user.dict(exclude={'password'}),
         hashed_password=hashed_password
         )
 
-    # user_in_db = UserInDB(
-    #     email = user.email,
-    #     nickname = user.nickname,
-    #     hashed_password = hashed_password
-    # )
-
+    # try:
     db.add(user_in_db)
     db.commit()
     db.refresh(user_in_db)
+    # except IntegrityError:
+    #     raise 'Email is already in use'
 
     # WIP it should not return UserInDB, but i'm testing
     return user_in_db

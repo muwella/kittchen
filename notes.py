@@ -150,3 +150,8 @@
 # back to normal
 
 # -----
+
+# NOTE i can just write 'db = Depends(get_db)'
+    # instead of 'db: Session = Depends(get_db)'
+
+# -----
