@@ -5,8 +5,7 @@
 
 from fastapi import FastAPI
 from .routers import users, recipes, login, ingredients
-from .database.database import engine
-from .models.users import Base
+from .database.database import engine, Base
 
 Base.metadata.create_all(bind=engine)
 

@@ -34,13 +34,13 @@ def get_user_by_email(
     return db.query(UserInDB).filter(UserInDB.email == email).first()
 
 
-def save_user(user: UserInCreate, db = Depends(get_db())):
+def save_user(user: UserInCreate, db: Session):
     hashed_password = 'hashed_' + user.password
 
-    # DOUBT .dict excludes password by itself?
+    # DOUBT does .dict excludes password by itself?
         # because there's no password field on UserInDB
     user_in_db = UserInDB(
-        **user.dict(),
+        **user.dict(exclude={'password'}),
         hashed_password=hashed_password
         )
 

@@ -9,7 +9,7 @@ from ..schemas.users import UserInCreate, UserInResponse
 # from sqlalchemy.orm import Session
 # utils & dependencies
 from ..utils.users import *
-from ..utils.dependencies import verify_token
+from ..utils.dependencies import get_db, verify_token
 from ..utils.security import oauth2_scheme
 
 
@@ -32,9 +32,10 @@ router = APIRouter(
     )
 def create_user(
     user_in: UserInCreate,
+    db = Depends(get_db),
     dependencies=[Depends(save_user)]
     ):
-    user_in_db = save_user(user_in)
+    user_in_db = save_user(user_in, db)
 
     return {'UserIn': user_in, 'UserInDB': user_in_db}
 

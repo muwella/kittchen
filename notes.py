@@ -133,3 +133,20 @@
     # .dict() unwraps the pydantic model UserInCreate and
     # allows us to fill another model with the data
     # in this case, it fills up UserInDB
+
+# -----
+
+# LATER: deactivate and reactivate accounts
+# if an user deactivates their account and wants it back,
+# when they enter their login credentials they'll see
+# a notice asking them to confirm if they want to
+# reactivate their account.
+
+# when an account is deactivated, all of their recipes
+# get hidden, and their friends will not be able to
+# see them anymore
+
+# if the account gets reactivated, everything goes
+# back to normal
+
+# -----
