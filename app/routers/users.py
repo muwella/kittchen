@@ -2,64 +2,103 @@
 from fastapi import APIRouter, Depends
 from fastapi import Body, Path
 from fastapi import status, HTTPException
+import fastapi
 # models
-from ..models.users import UserInDB
-from ..schemas.users import UserInCreate, UserInResponse
+from ..schemas.users import UserInCreate, UserInResponse, UserInUpdate
 # SQLAlchemy
-# from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session
 # utils & dependencies
-from ..utils.users import *
+from ..utils import users
 from ..utils.dependencies import get_db, verify_token
 from ..utils.security import oauth2_scheme
 
 
 # router
 
+# LOOKUP tags, dependencies, responses
 router = APIRouter(
     prefix = '/user',
-    # dependencies=[Depends(verify_token)],
-    # tags=['users']
-    # responses={404: {"description": "Not found"}}
+    tags=['users']
 )
 
 
 # endpoints
 
+# LOOKUP status_code responses
 @router.post(
     '/new',
-    # response_model = UserInResponse,
-    # status_code = status.HTTP_201_CREATED
-    )
+    status_code=status.HTTP_201_CREATED,
+)
 def create_user(
-    user_in: UserInCreate,
-    db = Depends(get_db),
-    dependencies=[Depends(save_user)]
-    ):
-    user_in_db = save_user(user_in, db)
+    user_in: UserInCreate = Body(),
+    db: Session = Depends(get_db)
+):
+    user_in_db = users.get_user_by_email(user_in.email, db)
 
-    return {'UserIn': user_in, 'UserInDB': user_in_db}
+    if user_in_db:
+        raise HTTPException(status_code=400, detail='Email already registered')
+    
+    return users.create_user(user_in, db)
 
 
-# DOUBT do i get ID as a simple int? Or as smth else
+# FIXME issue with sending user_id as an int
+    # without {user_id} and a Path() field
+    # also cannot send it as Body() bc of GET
 # @router.get(
-#     '/profile/me',
-#     response_model = UserInResponse,
-#     status_code = status.HTTP_200_OK,
-#     dependencies = [Depends(verify_token)]
-#     )
-# def get_user_me(token: str = Depends(oauth2_scheme)):
-#     return {'testing': 'oauth2'}
-
-
-# @router.get('/profile/{user_id}')
-# def get_user(user_id: int = Path(gt=0)):
-#     if user_id not in ['foo', 'bar']:
+#     '/me', 
+#     response_model=UserInResponse,
+#     status_code=status.HTTP_200_OK,
+#     # dependencies=[Depends(verify_token)]
+# )
+# def get_user_me(
+#     user_id: int,
+#     db: Session = Depends(get_db),
+#     # token: str = Depends(oauth2_scheme)
+# ):
+#     user_in_db = users.get_user_by_id(user_id, db)
+#     if user_in_db is None:
 #         raise HTTPException(status_code=404, detail='User not found')
-#     return get_user(user_id)
+
+#     return user_in_db
 
 
-# WIP check for unique username in DB
-    # also password & confirmation (new) email to change email
-# @router.put('/profile/me/edit')
-# def update_user(user_update: UserInCreate = Body()):
-#     return {}
+@router.get(
+    '/{user_id}', 
+    response_model=UserInResponse,
+    status_code=status.HTTP_200_OK,
+    # dependencies=[Depends(verify_token)]
+)
+def get_user(
+    user_id: int = Path(gt=0),
+    db: Session = Depends(get_db),
+    # token: str = Depends(oauth2_scheme)
+):
+    user_in_db = users.get_user_by_id(user_id, db)
+    if user_in_db is None:
+        raise HTTPException(status_code=404, detail='User not found')
+
+    return user_in_db
+
+
+# WIP how to update an existing user
+@router.put(
+    'me/update', 
+    status_code=status.HTTP_200_OK,
+    # dependencies=[Depends(verify_token)]
+)
+def update_user(
+    user: UserInUpdate = Body(),
+    # token: str = Depends(oauth2_scheme)
+):
+    return {}
+
+
+@router.delete(
+    'me/delete',
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(verify_token)]
+)
+def delete_user(
+    user_id: int
+):
+    return {}

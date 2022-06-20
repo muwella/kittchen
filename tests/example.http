@@ -1,9 +1,11 @@
-POST http://127.0.0.1:8000/user/new
+# POST http://127.0.0.1:8000/user/new
+# content-type: application/json
+
+# {
+#     "email": "marielabrascon@gmail.com",
+#     "nickname": "Maru",
+#     "password": "superStrong"
+# }
+
+GET http://127.0.0.1:8000/user/-2
 content-type: application/json
-
-{
-    "email": "marielabrascon@gmail.com",
-    "nickname": "Maru",
-    "password": "superStrong"
-}
-

@@ -10,7 +10,8 @@ from ..models.recipes import RecipeInDB, RecipeCategory
 
 
 router = APIRouter(
-    prefix='/recipes'
+    prefix='/recipes',
+    tags=['recipes']
 )
 
 
@@ -20,6 +21,12 @@ router = APIRouter(
     # or use a token? (is there a token in the GET header?)
 
 # FIXME commented because of DB
+@router.get('/')
+def show_recipes():
+    return {}
+
+
+
 # @router.get('/')
 # def show_recipes(
 #     name: Union[str, None] = Query(
