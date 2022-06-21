@@ -1,13 +1,17 @@
-# Python
-from typing import Union
 # FastAPI
-from fastapi import APIRouter
-from fastapi import Query, Path, Body
-from fastapi import status
+from fastapi import APIRouter, Depends
+from fastapi import Body, Path, Query
+from fastapi import status, HTTPException
 # models
-from ..models.recipes import RecipeInDB, RecipeCategory
-# dependencies
+from ..schemas.recipes import RecipeInCreate, RecipeInResponse, RecipeInUpdate
+# SQLAlchemy
+from sqlalchemy.orm import Session
+# utils & dependencies
+from ..utils import recipes
+from ..utils.dependencies import get_db, verify_token
 
+
+# router
 
 router = APIRouter(
     prefix='/recipes',
@@ -15,15 +19,22 @@ router = APIRouter(
 )
 
 
-### RECIPES
+# endpoints
 
-# TBD should i receive user_id to look for their recipes
-    # or use a token? (is there a token in the GET header?)
+@router.post(
+    '/new',
+    status_code=status.HTTP_201_CREATED,
+)
+def create_recipe(
+    recipe_in: RecipeInCreate = Body(),
+    db: Session = Depends(get_db)
+):
+    recipe_in_db = recipes.get_recipe(recipe_in.recipe_id==id, db)
 
-# FIXME commented because of DB
-@router.get('/')
-def show_recipes():
-    return {}
+    if user_in_db:
+        raise HTTPException(status_code=400, detail='Email already registered')
+    
+    return users.create_user(user_in, db)
 
 
 

@@ -5,8 +5,12 @@ from ..models.recipes import RecipeInDB
 from ..schemas.recipes import RecipeInCreate
 
 
-def get_recipe(db: Session, recipe_id: id):
+def get_recipe_by_id(db: Session, recipe_id: id):
     return db.query(RecipeInDB).filter(RecipeInDB.id == recipe_id).first()
+
+
+def get_recipe_by_name(db: Session, recipe_name: str, owner_id: id):
+    return db.query(RecipeInDB).filter(RecipeInDB.name == recipe_name).first()
 
 
 def create_recipe(

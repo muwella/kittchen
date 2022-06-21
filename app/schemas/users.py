@@ -6,7 +6,6 @@ from ..schemas.recipes import RecipeInResponse
 
 # pydantic models
 
-# received from user
 class UserBase(BaseModel):
     email: str
     nickname: str
@@ -22,15 +21,14 @@ class UserBase(BaseModel):
 
 # sent to user
 # in the Pydantic model for reading, add orm_mode = True
+    # this is because orm_mode makes the Pydantic model
+    # compatible with ORMs and I can declare it in the
+    # response_model argument in path operations
 class User(UserBase):
     id: int
     is_active: bool
-    # recipes: list[RecipeInResponse] = []
 
     class Config:
-        # orm_mode is to make the Pydantic model compatible
-            # with ORMs and I can declare it in the
-            # response_model argument in path operations
         orm_mode = True
         schema_extra = {
             'example': {
@@ -42,6 +40,7 @@ class User(UserBase):
         }
 
 
+# received from user
 class UserInCreate(UserBase):
     password: str
 
@@ -59,12 +58,14 @@ class UserInResponse(User):
     pass
 
 
+# received from user
 class UserInUpdate(BaseModel):
     nickname: Union[str, None] = Field(default=None)
     email: Union[EmailStr, None] = Field(default=None)
     password: Union[str, None] = Field(default=None)
 
 
+# received from user
 class UserInLogin(BaseModel):
     email: EmailStr
     password: str

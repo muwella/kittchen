@@ -16,6 +16,6 @@ class UserInDB(Base):
     hashed_password = Column('password', String(64))
     is_active = Column(Boolean, default=True)
     
-    # token= str
+    # token = str
     
     recipes = relationship('RecipeInDB', back_populates='creator')

@@ -2,7 +2,6 @@
 from fastapi import APIRouter, Depends
 from fastapi import Body, Path
 from fastapi import status, HTTPException
-import fastapi
 # models
 from ..schemas.users import UserInCreate, UserInResponse, UserInUpdate
 # SQLAlchemy
@@ -25,6 +24,7 @@ router = APIRouter(
 # endpoints
 
 # LOOKUP status_code responses
+# DOUBT should i have a required Body() on POST
 @router.post(
     '/new',
     status_code=status.HTTP_201_CREATED,
@@ -82,11 +82,12 @@ def get_user(
 
 # WIP how to update an existing user
 @router.put(
-    'me/update', 
+    '/{user_id}/update', 
     status_code=status.HTTP_200_OK,
     # dependencies=[Depends(verify_token)]
 )
 def update_user(
+    user_id: int = Path(gt=0),
     user: UserInUpdate = Body(),
     # token: str = Depends(oauth2_scheme)
 ):
@@ -94,11 +95,11 @@ def update_user(
 
 
 @router.delete(
-    'me/delete',
+    '/{user_id}/delete',
     status_code=status.HTTP_200_OK,
     dependencies=[Depends(verify_token)]
 )
 def delete_user(
-    user_id: int
+    user_id: int = Path(gt=0),
 ):
     return {}
