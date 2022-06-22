@@ -19,3 +19,6 @@ class UserInDB(Base):
     # token = str
     
     recipes = relationship('RecipeInDB', back_populates='creator')
+
+    # def __repr__(self) -> str:
+    #     return f"User(id={self.id!r},email={self.email!r}, nickname={self.nickname!r})"
