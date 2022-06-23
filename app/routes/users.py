@@ -80,7 +80,6 @@ def get_user(
     return user_in_db
 
 
-# WIP how to update an existing user
 @router.put(
     '/{user_id}/update', 
     status_code=status.HTTP_200_OK,
@@ -89,9 +88,11 @@ def get_user(
 def update_user(
     user_id: int = Path(gt=0),
     user: UserInUpdate = Body(),
+    db: Session = Depends(get_db)
     # token: str = Depends(oauth2_scheme)
 ):
-    return {}
+    users.update_user(user, user_id, db)
+    return get_user(user_id, db)
 
 
 @router.delete(

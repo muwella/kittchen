@@ -1,5 +1,5 @@
 # database
-from ..database.database import SessionLocal
+from ..config.database import SessionLocal
 from fastapi import Header, HTTPException
 
 # dependencies are functions that give to certain endpoints

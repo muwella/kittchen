@@ -2,7 +2,7 @@ from pydantic import validator
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, column
 from sqlalchemy.orm import relationship
 
-from ..database.database import Base
+from ..config.database import Base
 
 # SQLAlchemy models
 

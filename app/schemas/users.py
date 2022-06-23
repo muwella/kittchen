@@ -1,7 +1,5 @@
 from typing import Union
-
 from pydantic import BaseModel, EmailStr, Field
-
 from ..schemas.recipes import RecipeInResponse
 
 # pydantic models
