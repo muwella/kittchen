@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from .routes import users, recipes, login, ingredients
 from .config.database import engine, Base
 
+# Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -15,3 +16,5 @@ app.include_router(users.router)
 app.include_router(recipes.router)
 # app.include_router(login.router)
 # app.include_router(ingredients.router)
+
+# run local server: uvicorn app.main:app --reload

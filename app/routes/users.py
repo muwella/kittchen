@@ -2,29 +2,31 @@
 from fastapi import APIRouter, Depends
 from fastapi import Body, Path
 from fastapi import status, HTTPException
+
+from app.models.users import UserInDB
 # models
 from ..schemas.users import UserInCreate, UserInResponse, UserInUpdate
 # SQLAlchemy
 from sqlalchemy.orm import Session
+from ..config.database import conn
 # utils & dependencies
 from ..utils import users
 from ..utils.dependencies import get_db, verify_token
 from ..utils.security import oauth2_scheme
 
 
+# LOOKUP tags, dependencies, responses
 # router
 
-# LOOKUP tags, dependencies, responses
 router = APIRouter(
-    prefix = '/user',
+    prefix = '/users',
     tags=['users']
 )
 
 
+# LOOKUP status_code responses
 # endpoints
 
-# LOOKUP status_code responses
-# DOUBT should i have a required Body() on POST
 @router.post(
     '/new',
     status_code=status.HTTP_201_CREATED,
@@ -41,30 +43,9 @@ def create_user(
     return users.create_user(user_in, db)
 
 
-# FIXME issue with sending user_id as an int
-    # without {user_id} and a Path() field
-    # also cannot send it as Body() bc of GET
-# @router.get(
-#     '/me', 
-#     response_model=UserInResponse,
-#     status_code=status.HTTP_200_OK,
-#     # dependencies=[Depends(verify_token)]
-# )
-# def get_user_me(
-#     user_id: int,
-#     db: Session = Depends(get_db),
-#     # token: str = Depends(oauth2_scheme)
-# ):
-#     user_in_db = users.get_user_by_id(user_id, db)
-#     if user_in_db is None:
-#         raise HTTPException(status_code=404, detail='User not found')
-
-#     return user_in_db
-
-
 @router.get(
     '/{user_id}', 
-    response_model=UserInResponse,
+    # response_model=UserInResponse,
     status_code=status.HTTP_200_OK,
     # dependencies=[Depends(verify_token)]
 )
@@ -77,7 +58,7 @@ def get_user(
     if user_in_db is None:
         raise HTTPException(status_code=404, detail='User not found')
 
-    return user_in_db
+    return conn.execute((UserInDB.__table__).select()).fetchall()
 
 
 @router.put(
@@ -98,9 +79,10 @@ def update_user(
 @router.delete(
     '/{user_id}/delete',
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(verify_token)]
+    # dependencies=[Depends(verify_token)]
 )
 def delete_user(
     user_id: int = Path(gt=0),
+    # token: str = Depends(oauth2_scheme)
 ):
     return {}

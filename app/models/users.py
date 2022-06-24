@@ -22,5 +22,5 @@ class UserInDB(Base):
     
     recipes = relationship('RecipeInDB', back_populates='creator')
 
-    # def __repr__(self) -> str:
-    #     return f"User(id={self.id!r},email={self.email!r}, nickname={self.nickname!r})"
+    def __repr__(self) -> str:
+        return f"User(id={self.id!r},email={self.email!r}, nickname={self.nickname!r})"
