@@ -1,30 +1,22 @@
-from pydantic import validator
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, column
+from ..config.database import Base
 from sqlalchemy.orm import relationship
 
-from ..config.database import Base
-
 # SQLAlchemy models
-
-# created only by me
-class IngredientCategory(Base):
-    __tablename__ = 'ingredient_categories'
-    
-    id = Column(Integer, primary_key=True, index=True)
-    # name = Column(String)
-
-    # @validator('id')
-    # def positive_id(cls, v):
-    #     if v < 0:
-    #         raise ValueError('id must be positive')
-    #     return v.title()
-
-
 
 class IngredientInDB(Base):
     __tablename__ = 'ingredients'
 
     id = Column(Integer, primary_key=True, index=True)
-    # name = Column(String)
+    name = Column(String)
+    creator_id = Column('creator', Integer, ForeignKey('users.id'), default=1)
+    category_id = Column('category', Integer, ForeignKey('ingredient_categories.id'))
+    is_default = Column(Boolean, default=True)
 
-    # category_id = Column('category', Integer, ForeignKey('ingredient_categories.id'))
+    # category = 
+
+
+# default recipe categories:
+#   - meal
+#   - dessert
+#   - no category

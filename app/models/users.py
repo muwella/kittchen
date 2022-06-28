@@ -1,9 +1,8 @@
 # SQLite
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column
 from sqlalchemy.sql.sqltypes import Integer, String, Boolean
-from sqlalchemy.orm import relationship
-
 from ..config.database import Base
+from sqlalchemy.orm import relationship
 
 # SQLAlchemy models
 
@@ -17,8 +16,7 @@ class UserInDB(Base):
     nickname = Column(String(255))
     hashed_password = Column('password', String(64))
     is_active = Column(Boolean, default=True)
-    
-    # token = str
+    token = str
     
     recipes = relationship('RecipeInDB', back_populates='creator')
 
