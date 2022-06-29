@@ -1,8 +1,8 @@
-"""testing
+"""rship user recipes
 
-Revision ID: fb5be109007a
-Revises: 
-Create Date: 2022-06-27 16:58:51.609556
+Revision ID: dd169c58fe79
+Revises: bc866ea3d78f
+Create Date: 2022-06-28 19:41:14.291441
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fb5be109007a'
-down_revision = None
+revision = 'dd169c58fe79'
+down_revision = 'bc866ea3d78f'
 branch_labels = None
 depends_on = None
 

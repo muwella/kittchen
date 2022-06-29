@@ -1,6 +1,9 @@
+# SQLAlchemy
 from sqlalchemy import Column, ForeignKey, Integer, String
-from ..config.database import Base
 from sqlalchemy.orm import relationship
+from .recipe_ingredients import RecipeIngredient
+# database
+from ..config.database import Base
 
 # SQLAlchemy models
 
@@ -14,6 +17,12 @@ class RecipeInDB(Base):
     category_id = Column('category', Integer, ForeignKey('recipe_categories.id'))
 
     creator = relationship('UserInDB', back_populates='recipes')
+    category = relationship('RecipeCategoryInDB', back_populates='recipes')
+    ingredients = relationship('IngredientsInDB', secondary=RecipeIngredient, backref='recipes')
 
-    # def __repr__(self) -> str:
-    #     return f"Recipe(id={self.id!r},name={self.name!r})"
+
+# One-To-Many relationship:
+    # Parent class has: children = relationship('Child', back_populates='parent')
+    # Child class has:
+       # ForeignKey to Parent.id
+       # parent = relationship('Parent', back_populates='children')
