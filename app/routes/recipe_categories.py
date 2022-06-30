@@ -3,8 +3,10 @@ from fastapi import APIRouter
 from fastapi import Query, Path, Body
 from fastapi import status
 # models
-from ..models.recipes import RecipeInDB, RecipeCategory
-from ..schemas.recipes import RecipeInCreate, RecipeCategoryInCreate
+from ..models.recipes import RecipeInDB
+from ..models.recipe_categories import RecipeCategoryInDB
+from ..schemas.recipes import RecipeInCreate
+from ..schemas.recipe_categories import RecipeCategoryInCreate
 # dependencies
 
 

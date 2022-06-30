@@ -12,7 +12,7 @@ from ..config.database import conn
 # utils & dependencies
 from ..utils import users
 from ..utils.dependencies import get_db, verify_token
-from ..utils.security import oauth2_scheme
+from ..config.security import oauth2_scheme
 
 
 # LOOKUP tags, dependencies, responses
