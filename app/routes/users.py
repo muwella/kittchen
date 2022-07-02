@@ -15,7 +15,6 @@ from ..utils.dependencies import get_db, verify_token
 from ..config.security import oauth2_scheme
 
 
-# LOOKUP tags, dependencies, responses
 # router
 
 router = APIRouter(
@@ -24,7 +23,6 @@ router = APIRouter(
 )
 
 
-# LOOKUP status_code responses
 # endpoints
 
 @router.post(
