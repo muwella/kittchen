@@ -6,12 +6,14 @@ from ..schemas.recipes import RecipeInResponse
 
 class UserBase(BaseModel):
     email: str
+    username: str
     nickname: str
 
     class Config:
         schema_extra = {
             'example': {
                 'nickname': 'Maru',
+                'username': 'muwella',
                 'email': 'marielabrascon@gmail.com'
             }
         }
@@ -31,6 +33,7 @@ class User(UserBase):
         schema_extra = {
             'example': {
                 'nickname': 'Maru',
+                'username': 'muwella',
                 'email': 'marielabrascon@gmail.com',
                 'id': 1,
                 'is_active': True
@@ -46,6 +49,7 @@ class UserInCreate(UserBase):
         schema_extra = {
             'example': {
                 'email': 'marielabrascon@gmail.com',
+                'username': 'muwella',
                 'nickname': 'Maru',
                 'password': 'bigTime'
             }
@@ -59,20 +63,21 @@ class UserInResponse(User):
 # received from user
 class UserInUpdate(BaseModel):
     nickname: Union[str, None] = Field(default=None)
+    username: Union[str, None] = Field(default=None)
     email: Union[EmailStr, None] = Field(default=None)
     password: Union[str, None] = Field(default=None)
 
 
 # received from user
 class UserInLogin(BaseModel):
-    email: EmailStr
+    username: str
     password: str
 
     class Config:
         schema_extra = {
             'example': {
-                'email': 'marielabrascon@gmail.com',
-                'password': 'landOfConfusion'
+                'username': 'muwella',
+                'password': 'bigTime'
             }
         }
 

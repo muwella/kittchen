@@ -11,6 +11,7 @@ from ..schemas.users import UserInCreate, UserInUpdate, UserInLogin
 # password encryption
 from passlib.hash import bcrypt
 
+# LOOKUP query, filter, exists, scalar, all, etc.
 
 # WIP raise exceptions
     # user doesn't exist
@@ -38,7 +39,11 @@ def get_user_by_id(user_id: int, db: Session) -> UserInDB:
     return db.query(UserInDB).filter(UserInDB.id == user_id).first()
 
 
-def get_user_by_email(email: str, db: Session) -> (Union[UserInDB, None]):
+def get_user_by_username(username: str, db: Session) -> (Union[UserInDB, None]):
+    return db.query(UserInDB).filter(UserInDB.username == username).first()
+
+
+def get_user_by_email(email: str, db: Session) -> Union[UserInDB, None]:
     return db.query(UserInDB).filter(UserInDB.email == email).first()
 
 
@@ -57,19 +62,3 @@ def update_user(user: UserInUpdate, user_id: int, db: Session):
 def delete_user(user_id: int, db: Session):
     db.delete()
     pass
-
-
-# verifications
-
-def verify_email_exists(email: str, db: Session):
-    return db.query(UserInDB.query.filter(UserInDB.email == email).exists()).scalar()
-
-
-def verify_login_match(user: UserInLogin, db: Session):
-    if verify_email_exists(user.email, db) is None:
-        raise HTTPException(status_code=404, detail='Email not found')
-    else:
-        user_in_db = get_user_by_email(user.email, db)
-
-        return bcrypt.verify(user.password, user_in_db.hashed_password)
-    
