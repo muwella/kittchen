@@ -1,27 +1,28 @@
+# python
+from typing import Union
 # SQLAlchemy
 from sqlalchemy.orm import Session
 # fastapi
 from fastapi import Depends
+from fastapi import HTTPException
 # models
 from ..models.users import UserInDB
 from ..schemas.users import UserInCreate, UserInUpdate, UserInLogin
+# password encryption
+from passlib.hash import bcrypt
 
 
 # WIP raise exceptions
     # user doesn't exist
     # email is already in use
-    # incorrect email or password
 
 
 # create
 
-# WIP encripted password
 def create_user(user: UserInCreate, db: Session):
-    hashed_password = 'hashed_' + user.password
-
     user_in_db = UserInDB(
         **user.dict(exclude={'password'}),
-        hashed_password=hashed_password
+        hashed_password=bcrypt.hash(user.password)
     )
 
     db.add(user_in_db)
@@ -37,7 +38,7 @@ def get_user_by_id(user_id: int, db: Session) -> UserInDB:
     return db.query(UserInDB).filter(UserInDB.id == user_id).first()
 
 
-def get_user_by_email(email: str, db: Session) -> UserInDB:
+def get_user_by_email(email: str, db: Session) -> (Union[UserInDB, None]):
     return db.query(UserInDB).filter(UserInDB.email == email).first()
 
 
@@ -64,11 +65,11 @@ def verify_email_exists(email: str, db: Session):
     return db.query(UserInDB.query.filter(UserInDB.email == email).exists()).scalar()
 
 
-# WIP encripted password
 def verify_login_match(user: UserInLogin, db: Session):
-    user = get_user_by_email(user.email, db)
-    
-    db_password = user.hashed_password
+    if verify_email_exists(user.email, db) is None:
+        raise HTTPException(status_code=404, detail='Email not found')
+    else:
+        user_in_db = get_user_by_email(user.email, db)
 
-    return user.password == db_password
+        return bcrypt.verify(user.password, user_in_db.hashed_password)
     

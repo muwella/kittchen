@@ -32,7 +32,6 @@ def get_recipe_by_name(db: Session, recipe_name: str, user_id: id):
     return user_recipes.filter(RecipeInDB.name == recipe_name).first()
 
 
-# WIP a recipe-ingredient relationship table
 def create_recipe(
     db: Session,
     recipe: RecipeInCreate,

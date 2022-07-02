@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-# WIP add this router to the app on main
+# WIP generate token with JSON Web Tokens
 
 router = APIRouter(tags=['token'])
 

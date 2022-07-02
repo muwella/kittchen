@@ -6,11 +6,11 @@ from ..config.database import Base
 # SQLAlchemy models
 
 # Many-To-Many recipe/ingredient relationship
-class RecipeIngredient(Base):
-    __tablename__ = 'recipe_ingredient'
+# class RecipeIngredient(Base):
+#     __tablename__ = 'recipe_ingredient'
 
-    recipe_id = Column(Integer, ForeignKey('recipes.id'), primary_key=True)
-    ingredient_id = Column(Integer, ForeignKey('ingredients.id'), primary_key=True)
+#     recipe_id = Column(Integer, ForeignKey('recipes.id'), primary_key=True)
+#     ingredient_id = Column(Integer, ForeignKey('ingredients.id'), primary_key=True)
 
 
 # Many-To-Many relationship:

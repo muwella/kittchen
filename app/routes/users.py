@@ -37,7 +37,7 @@ def create_user(
 ):
     user_in_db = users.get_user_by_email(user_in.email, db)
 
-    if user_in_db:
+    if user_in_db is not None:
         raise HTTPException(status_code=400, detail='Email already registered')
     
     return users.create_user(user_in, db)
