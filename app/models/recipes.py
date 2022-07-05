@@ -8,11 +8,13 @@ from ..config.database import Base
 # SQLAlchemy models
 
 
+### DEPRECATED ###
 # class RecipeIngredient(Base):
 #     __tablename__ = 'recipe_ingredient'
 
 #     recipe_id = Column(Integer, ForeignKey('recipes.id'), primary_key=True)
 #     ingredient_id = Column(Integer, ForeignKey('ingredients.id'), primary_key=True)
+
 
 # Many-To-Many recipe/ingredient relationship
 RecipeIngredient = Table(

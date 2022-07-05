@@ -3,33 +3,36 @@ from sqlalchemy.orm import Session
 # fastapi
 from fastapi import HTTPException
 # models
-from ..models.users import UserInDB
-from ..schemas.users import UserInLogin, UserInResponse
+from ..schemas.users import UserInResponse
 # utils
-from .users import get_user_by_email
+from .dependencies import get_db
+from .users import get_user_by_username
 # password encryption
 from passlib.hash import bcrypt
-
-
-# verifications
-
-def email_exists(email: str, db: Session):
-    return get_user_by_email(email, db).exists().scalar()
 
 
 def passwords_match(password: str, hashed_password: str):
     return bcrypt.verify(password, hashed_password)
 
 
-# WIP user has to have an username
-def verify_login(user: UserInLogin, db: Session):
+def authenticate_user(username: str, password: str, db: Session):
+    '''Verifies username and password and logs in an user.'''
 
-    if not email_exists(user.email, db):
-        raise HTTPException(status_code=404, detail='Email not found')
+    user_db = get_user_by_username(username, db)
+    if user_db is None:
+        raise HTTPException(status_code=404, detail='Invalid username')
     else:
-        user_in_db = get_user_by_email(user.email, db)
-        if not passwords_match(user.password, user_in_db.hashed_password):
+        if not passwords_match(password, user_db.hashed_password):
             raise HTTPException(status_code=401, detail='Invalid password')
+        else:
 
-    # WIP for testing
-    return user_in_db
+            # FIXME can't use dict on SQLAlchemy model (UserInDB), how to extract info?
+            user_db_dict = user_db.dict()
+            user_response = UserInResponse(
+                username=user_db_dict['username'],
+                email=user_db_dict['email'],
+                nickname=user_db_dict['nickname'],
+                id=user_db_dict['id'],
+                is_active=user_db_dict['is_active']
+            )
+            return user_db
