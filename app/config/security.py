@@ -33,6 +33,6 @@ def generate_token(
 
 
 # WIP how to know my token to send it as header on a request?
-@router.get('/',dependencies=[Depends(verify_token)])
+@router.get('/', dependencies=[Depends(verify_token)])
 def get_token(token: str = Depends(oauth2_scheme)):
     return token
