@@ -33,24 +33,30 @@ def create_user(
     user_in: UserInCreate = Body(),
     db: Session = Depends(get_db)
 ):
-    user_in_db = users.get_user_by_email(user_in.email, db)
+    user_in_db = users.get_user_by_username(user_in.username, db)
+    if user_in_db:
+        raise HTTPException(status_code=400, detail='Username is already in use')
 
-    if user_in_db is not None:
-        raise HTTPException(status_code=400, detail='Email already registered')
+    user_in_db = users.get_user_by_email(user_in.email, db)
+    if user_in_db:
+        raise HTTPException(status_code=400, detail='Email is already in use')
     
-    return users.create_user(user_in, db)
+    users.create_user(user_in, db)
+
+    # WIP what to return
+    return {'status': status.HTTP_201_CREATED}
 
 
 @router.get(
     '/{user_id}', 
-    # response_model=UserInResponse,
+    response_model=UserInResponse,
     status_code=status.HTTP_200_OK,
-    # dependencies=[Depends(verify_token)]
+    dependencies=[Depends(verify_token)]
 )
 def get_user(
     user_id: int = Path(gt=0),
     db: Session = Depends(get_db),
-    # token: str = Depends(oauth2_scheme)
+    token: str = Depends(oauth2_scheme)
 ):
     user_in_db = users.get_user_by_id(user_id, db)
     if user_in_db is None:

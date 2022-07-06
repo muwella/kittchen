@@ -39,7 +39,7 @@ def get_user_by_id(user_id: int, db: Session) -> UserInDB:
     return db.query(UserInDB).filter(UserInDB.id == user_id).first()
 
 
-def get_user_by_username(username: str, db: Session) -> (Union[UserInDB, None]):
+def get_user_by_username(username: str, db: Session) -> Union[UserInDB, None]:
     return db.query(UserInDB).filter(UserInDB.username == username).first()
 
 

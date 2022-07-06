@@ -25,14 +25,6 @@ def authenticate_user(username: str, password: str, db: Session):
         if not passwords_match(password, user_db.hashed_password):
             raise HTTPException(status_code=401, detail='Invalid password')
         else:
+            user_response = UserInResponse.from_orm(user_db)
 
-            # FIXME can't use dict on SQLAlchemy model (UserInDB), how to extract info?
-            user_db_dict = user_db.dict()
-            user_response = UserInResponse(
-                username=user_db_dict['username'],
-                email=user_db_dict['email'],
-                nickname=user_db_dict['nickname'],
-                id=user_db_dict['id'],
-                is_active=user_db_dict['is_active']
-            )
-            return user_db
+            return user_response

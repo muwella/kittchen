@@ -5,15 +5,12 @@ from fastapi import Header, HTTPException
 # dependencies are functions that give to certain endpoints
     # certain things that they need without repeating code
 
-# WIP Bigger Applications - Multiple files: dependencies
-
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
-
 
 # WIP fake token
 def verify_token(x_token: str = Header()):
