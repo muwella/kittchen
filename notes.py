@@ -159,3 +159,10 @@
 # En los esquemas de Pydantic de respuesta (orm_mode = True)
 # Las instancias de objeto de esas clases tienen que crearse con "from_orm"
 # obj = PydanticModel.from_orm(ModelInDB)
+
+# -----
+
+# Old Procfile heroku deploy:
+    # web: uvicorn main:app --host 0.0.0.0 --port $PORT
+# New Procfile heroku deploy:
+    # web: uvicorn main:app --host 0.0.0.0 --port=${PORT:-5000}
