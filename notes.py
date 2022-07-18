@@ -155,3 +155,7 @@
     # instead of 'db: Session = Depends(get_db)'
 
 # -----
+
+# En los esquemas de Pydantic de respuesta (orm_mode = True)
+# Las instancias de objeto de esas clases tienen que crearse con "from_orm"
+# obj = PydanticModel.from_orm(ModelInDB)
