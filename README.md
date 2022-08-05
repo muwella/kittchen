@@ -12,7 +12,9 @@ REST API Python FastAPI project
 requires venv
 on kittchen directory, activate venv
 
-    pip install -r requirements.txt
+´´´
+pip install -r requirements.txt
+´´´
 
 ## Run it
 (WIP)
