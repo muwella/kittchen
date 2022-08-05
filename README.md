@@ -5,7 +5,9 @@ Kittchen is a REST API Python app with it's recently developed FastAPI framework
 
 ### What it does
 Kittchen is a personal project intended for solving issues with time management, balancing productivity and wellbeing with an organised diet and a thought out nutrition.
+
 It allows the user to keep track of their favorite recipes, their shopping needs, and to plan meals faster and easier.
+
 It's ultimate goal it's to remove time loss and meal-prepping-centred worried thoughts!
 
 ## Quickstart
@@ -17,13 +19,13 @@ On Windows:
 python -m venv venv
 ```
 
-* On Kittchen directory, activate virtual environment:
+* Activate it on C:/your/path/to/kittchen directory:
 
 ```
 venv\Scripts\activate
 ```
 
-* Install project requirements:
+* Once is activated, install project requirements:
 
 ```
 pip install -r requirements.txt
@@ -39,30 +41,32 @@ $ uvicorn main:app --reload
 You can see the automatic interactive API documentation on your localhost: http://127.0.0.1:8000/docs
 
 ## Project structure
+(WIP)
+
     app
-    ├── config            
+    ├── config
     │   ├── database.py
     │   └── security.py 
-    ├── models
-    │   ├── images.py ?
+    ├── models                          - ORM models of relational database 
+    │   ├── images.py (WIP)
     │   ├── ingredient_categories.py
     │   ├── ingredients.py
     │   ├── recipe_categories.py
     │   ├── recipe_ingredients.py
     │   ├── recipes.py
     │   └── users.py
-    ├── routes
+    ├── routes                          -  
     │   ├── ingredients.py
     │   ├── main.py ?
     │   ├── recipe_categories.py
     │   ├── recipes.py
     │   └── users.py
-    ├── schemas
+    ├── schemas                         -
     │   ├── ingredients.py
     │   ├── recipe_categories.py
     │   ├── recipes.py
     │   └── users.py
-    ├── utils
+    ├── utils                           -
     │   ├── authentication.py
     │   ├── dependencies.py
     │   ├── errors.py
@@ -70,7 +74,7 @@ You can see the automatic interactive API documentation on your localhost: http:
     │   ├── recipes_ingredients.py
     │   ├── recipes.py
     │   └── users.py
-    └── main.py          - FastAPI application creation and configuration.
+    └── main.py                         - FastAPI application creation and configuration.
 
 
 ## Thanks
