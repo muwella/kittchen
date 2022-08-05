@@ -11,13 +11,15 @@ REST API Python FastAPI project
 (WIP)
 requires venv
 on kittchen directory, activate venv
-  pip install -r requirements.txt
+
+    pip install -r requirements.txt
 
 ## Run it
 (WIP)
 This project uses uvicorn as ASGI server
 Run the server with:
-  $ uvicorn main:app --reload
+
+    $ uvicorn main:app --reload
 
 You can see the automatic interactive API documentation
 
