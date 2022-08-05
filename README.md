@@ -1,29 +1,42 @@
 # Kittchen
 
-### what it is
-(WIP)
-REST API Python FastAPI project
+### What it is
+Kittchen is a REST API Python app with it's recently developed FastAPI framework.
 
-### what it does
-(WIP)
+### What it does
+Kittchen is a personal project intended for solving issues with time management, balancing productivity and wellbeing with an organised diet and a thought out nutrition.
+It allows the user to keep track of their favorite recipes, their shopping needs, and to plan meals faster and easier.
+It's ultimate goal it's to remove time loss and meal-prepping-centred worried thoughts!
 
 ## Quickstart
-(WIP)
-requires venv
-on kittchen directory, activate venv
+On Windows:
+
+* Create a virtual environment
+
+```
+python -m venv venv
+```
+
+* On Kittchen directory, activate virtual environment:
+
+```
+venv\Scripts\activate
+```
+
+* Install project requirements:
 
 ```
 pip install -r requirements.txt
 ```
 
 ## Run it
-(WIP)
-This project uses uvicorn as ASGI server
-Run the server with:
+This project uses uvicorn as ASGI server. Run the server with:
 
-    $ uvicorn main:app --reload
+```
+$ uvicorn main:app --reload
+```
 
-You can see the automatic interactive API documentation
+You can see the automatic interactive API documentation on your localhost: http://127.0.0.1:8000/docs
 
 ## Project structure
     app
