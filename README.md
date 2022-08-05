@@ -11,7 +11,7 @@ It's ultimate goal it's to remove time loss and meal-prepping-centred worried th
 ## Quickstart
 On Windows:
 
-* Create a virtual environment
+* Create a virtual environment:
 
 ```
 python -m venv venv
