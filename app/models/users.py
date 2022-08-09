@@ -18,3 +18,5 @@ class UserInDB(Base):
     token = Column(String(255))
     
     recipes = relationship('RecipeInDB', back_populates='creator')
+    ingredients = relationship('IngredientInDB', back_populates='creator')
+

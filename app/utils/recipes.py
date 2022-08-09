@@ -57,3 +57,21 @@ def create_recipe(
     db.refresh(recipe_in_db)
 
     return {'recipe in db': recipe_in_db}
+
+
+
+# WIP to create recipes, ingredients and their relationships!!
+
+ # Rows in RecipeInDB and IngredientInDB get created as normal
+        # recipe = RecipeInDB(...)
+        # ingredient1 = IngredientInDB(...)
+        # db.session.add_all([recipe, ingredient1])
+        # db.session.commit()
+    
+    # Then
+        # recipe.ingredients.append(ingredient1)
+        # db.session.commit()
+
+    # to remove item:
+        # recipe.ingredients.remove(ingredient1)
+        # db.session.commit()

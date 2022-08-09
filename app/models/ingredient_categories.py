@@ -6,13 +6,19 @@ from ..config.database import Base
 
 # SQLAlchemy models
 
-# default categories by kittchen; users do not create their own
-class IngredientCategoryInDB(Base):
-    __tablename__ = 'ingredient_categories'
-    
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
+# NOTE default categories by kittchen; users do not create their own
 
+#### LATER ####
+
+# class IngredientCategoryInDB(Base):
+#     __tablename__ = 'ingredient_categories'
+    
+#     id = Column(Integer, primary_key=True, index=True)
+#     name = Column(String)
+
+
+
+# TBD which food categories?
 
 # WIP default categories:
 #   - cereal & legumes
@@ -20,7 +26,7 @@ class IngredientCategoryInDB(Base):
 #   - meat & dairy
 #   - fish & eggs?
 #   - sweets & fats
-
+#   - other
 
 # WIP to put on DB:
 # Cereals = 0
@@ -29,3 +35,4 @@ class IngredientCategoryInDB(Base):
 # Dairy = 3
 # Meat = 4
 # Fats = 5
+# Other = 6

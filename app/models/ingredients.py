@@ -1,5 +1,5 @@
 # SQLAlchemy
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
 # database
 from ..config.database import Base
@@ -8,14 +8,17 @@ from ..config.database import Base
 
 # WIP solve IngredientInDB model issue (both here and on models/recipes.py)
 
-class IngredientInDB(Base):
-    __tablename__ = 'ingredients'
+# class IngredientInDB(Base):
+#     __tablename__ = 'ingredients'
     
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255))
-    category_id = Column(Integer)
+#     id = Column(Integer, primary_key=True, index=True)
+#     name = Column(String(255))
+#     creator_id = Column(Integer, ForeignKey('users.id'))
+#     is_default = Column(Boolean, default=True)
+#     # category_id = Column(Integer)
 
-    category = relationship('IngredientCategoryInDB', back_populates='ingredients')
+#     creator = relationship('UserInDB', back_populates='recipes')
+#     # category = relationship('IngredientCategoryInDB', back_populates='ingredients')
 
 
 
