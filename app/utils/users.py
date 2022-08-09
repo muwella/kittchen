@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 # fastapi
 from fastapi import Depends
 from fastapi import HTTPException
-# models
+# models (DB) & schemas
 from ..models.users import UserInDB
 from ..schemas.users import UserInCreate, UserInUpdate, UserInLogin
 # password encryption
@@ -20,7 +20,10 @@ from passlib.hash import bcrypt
 
 # create
 
-def create_user(user: UserInCreate, db: Session):
+def create_user(
+    user: UserInCreate,
+    db: Session
+):
     user_in_db = UserInDB(
         **user.dict(exclude={'password'}),
         hashed_password=bcrypt.hash(user.password)
