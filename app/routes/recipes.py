@@ -2,13 +2,14 @@
 from fastapi import APIRouter, Depends
 from fastapi import Body, Path, Query
 from fastapi import status, HTTPException
-# models
-from ..schemas.recipes import RecipeInCreate, RecipeInResponse, RecipeInUpdate
 # SQLAlchemy
 from sqlalchemy.orm import Session
 # utils & dependencies
 from ..utils import recipes
 from ..utils.dependencies import get_db, verify_token
+# models (DB) & schemas
+from ..models.recipes import RecipeInDB
+from ..schemas.recipes import RecipeInCreate, RecipeInResponse, RecipeInUpdate
 
 
 # router
@@ -29,12 +30,12 @@ def create_recipe(
     recipe_in: RecipeInCreate = Body(),
     db: Session = Depends(get_db)
 ):
-    recipe_in_db = recipes.get_recipe(recipe_in.recipe_id==id, db)
+    # DOUBT would they be any problem creating a new recipe?
+        # it doesn't have any UNIQUE constraint
 
-    if user_in_db:
-        raise HTTPException(status_code=400, detail='Email already registered')
-    
-    return users.create_user(user_in, db)
+    recipes.create_recipe(recipe_in, db)
+
+    return {'HTTP status': status.HTTP_201_CREATED}
 
 
 

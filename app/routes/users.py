@@ -2,10 +2,6 @@
 from fastapi import APIRouter, Depends
 from fastapi import Body, Path
 from fastapi import status, HTTPException
-
-from app.models.users import UserInDB
-# models
-from ..schemas.users import UserInCreate, UserInResponse, UserInUpdate
 # SQLAlchemy
 from sqlalchemy.orm import Session
 from ..config.database import conn
@@ -13,12 +9,15 @@ from ..config.database import conn
 from ..utils import users
 from ..utils.dependencies import get_db, verify_token
 from ..config.security import oauth2_scheme
+# models (DB) & schemas
+from ..models.users import UserInDB
+from ..schemas.users import UserInCreate, UserInResponse, UserInUpdate
 
 
 # router
 
 router = APIRouter(
-    prefix = '/users',
+    prefix='/users',
     tags=['users']
 )
 
@@ -43,8 +42,7 @@ def create_user(
     
     users.create_user(user_in, db)
 
-    # WIP what to return
-    return {'status': status.HTTP_201_CREATED}
+    return {'HTTP status': status.HTTP_201_CREATED}
 
 
 @router.get(
