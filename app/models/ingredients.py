@@ -1,13 +1,25 @@
 # SQLAlchemy
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import relationship
 # database
 from ..config.database import Base
 
 # SQLAlchemy models
 
+# WIP solve IngredientInDB model issue (both here and on models/recipes.py)
 
-# WIP default ingredients
+class IngredientInDB(Base):
+    __tablename__ = 'ingredients'
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255))
+    category_id = Column(Integer)
+
+    category = relationship('IngredientCategoryInDB', back_populates='ingredients')
+
+
+
+# TBD default ingredients
 #   - fruits: [manzana roja, manzana verde, bananas, naranjas, mandanrinas, peras, frutillas,
 #              sandía, cerezas, moras, frambuesas, arandanos, durazno, palta, coco, granada, kiwi,
 #              limón, lima, mango, papaya, damasco, ananá, melón, maracuyá, higo, ciruela, membrillo,

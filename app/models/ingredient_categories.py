@@ -15,8 +15,17 @@ class IngredientCategoryInDB(Base):
 
 
 # WIP default categories:
-#   - fruits & vegetables
 #   - cereal & legumes
+#   - fruits & vegetables
 #   - meat & dairy
 #   - fish & eggs?
 #   - sweets & fats
+
+
+# WIP to put on DB:
+# Cereals = 0
+# Fruits = 1
+# Vegetables = 2
+# Dairy = 3
+# Meat = 4
+# Fats = 5

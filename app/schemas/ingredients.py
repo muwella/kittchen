@@ -1,39 +1,47 @@
-#Python
-from enum import Enum
-#Pydantic
+from typing import Union
 from pydantic import BaseModel, Field
 
-
-class IngredientCategory(Enum):
-    pass
-#     cereals = 0
-#     fruits = 1
-#     vegetables = 2
-#     dairy = 3
-#     meat = 4
-#     fats = 5
-
+# pydantic models
 
 class IngredientBase(BaseModel):
     name: str
     category_id: int
 
+    class Config:
+        schema_extra = {
+            'example': {
+                'name': 'Tomato',
+                'category_id': 1
+            }
+        }
 
 
+# sent to user
+    # this scheme has DB added info
+# TBD add is_default? add other things? DEFINE
+class Ingredient(IngredientBase):
+    id: int
 
-class Ingredient(BaseModel):
-    pass
-#     name: str = Field(
-#         min_length=1,
-#         max_length=50,
-#         example='banana'
-#     )
-#     category: IngredientCategory = Field(
-#         default=None,
-#         example='fruit'
-#     )
+    class Config:
+        schema_extra = {
+            'example': {
+                'id': 10,
+                'name': 'Tomato',
+                'category_id': 1
+            }
+        }
 
 
 # received from user
 class IngredientInCreate(IngredientBase):
     pass
+
+
+class IngredientInResponse(Ingredient):
+    pass
+
+
+# received from user
+class IngredientInUpdate(BaseModel):
+    name: Union[str, None] = Field(default=None)
+    category_id: Union[int, None] = Field(default=None)
