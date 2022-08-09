@@ -1,6 +1,5 @@
 from typing import Union
-from pydantic import BaseModel, EmailStr, Field
-from ..schemas.recipes import RecipeInResponse
+from pydantic import BaseModel, Field
 
 # pydantic models
 
@@ -20,6 +19,7 @@ class UserBase(BaseModel):
 
 
 # sent to user
+    # this scheme has DB added info
 class User(UserBase):
     id: int
     is_active: bool
