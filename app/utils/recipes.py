@@ -1,10 +1,10 @@
 # SQLAlchemy
 from sqlalchemy.orm import Session
 # models
-from ..models.recipes import RecipeInDB
+from ..models.recipes import IngredientInDB, RecipeInDB
 from ..schemas.recipes import RecipeInCreate
 from ..utils.recipe_categories import get_category_by_string
-
+from ..utils.ingredients import get_ingredient_by_id
 
 # WIP raise exceptions
     # recipe doesn't exist
@@ -33,18 +33,16 @@ def get_recipe_by_name(db: Session, recipe_name: str, user_id: id):
 
 
 def create_recipe(
-    db: Session,
     recipe: RecipeInCreate,
-    ingredients_id: list[int],
+    db: Session,
     user_id = int
-    ):
-
-    # get category_id from string received
-    category = get_category_by_string(db, recipe.category)
+):
+    # get category_id from received string
+    category_id = get_category_by_string(db, recipe.category)
 
     # get ingredients IDs from list[int] received
-    for id in ingredients_id:
-        # db.query(IngredientInDB).filter(IngredientInDB.id == id).first()
+    for id in recipe.ingredients_id:
+        ingredient_in_db = get_ingredient_by_id(id, db)
         # add a recipe-ingredient relationship with each id
         pass
 
