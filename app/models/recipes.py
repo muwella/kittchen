@@ -25,6 +25,7 @@ RecipeIngredient = Table(
 )
 
 
+# DOUBT why did I put ingredientInDB in here
 class IngredientInDB(Base):
     __tablename__ = 'ingredients'
 
