@@ -2,20 +2,11 @@
 from typing import Union
 # SQLAlchemy
 from sqlalchemy.orm import Session
-# fastapi
-from fastapi import Depends
-from fastapi import HTTPException
 # models (DB) & schemas
 from ..models.users import UserInDB
-from ..schemas.users import UserInCreate, UserInUpdate, UserInLogin
+from ..schemas.users import UserInCreate, UserInUpdate
 # password encryption
 from passlib.hash import bcrypt
-
-# LOOKUP query, filter, exists, scalar, all, etc.
-
-# WIP raise exceptions
-    # user doesn't exist
-    # email is already in use
 
 
 # create
@@ -56,14 +47,21 @@ def get_users_by_id(users_id: list[int], db: Session):
 
 # update
 
-# WIP
-def update_user(user: UserInUpdate, user_id: int, db: Session):
-    return {}
+def update_user(user_update: UserInUpdate, user_in_db: UserInDB, db: Session):
+    if user_update.nickname:
+        user_in_db.nickname = user_update.nickname
+    
+    if user_update.password:
+        user_in_db.hashed_password = bcrypt.hash(user_update.password)
+
+    db.commit()
+ 
+    return get_user_by_id(user_in_db.id, db)
 
 
 # delete
 
-# WIP
-def delete_user(user_id: int, db: Session):
-    db.delete()
-    pass
+def delete_user(user: UserInDB, db: Session):
+    db.delete(user)
+    db.commit()
+

@@ -11,7 +11,7 @@ from ..utils.dependencies import get_db, verify_token
 from ..config.security import oauth2_scheme
 # models (DB) & schemas
 from ..models.users import UserInDB
-from ..schemas.users import UserInCreate, UserInResponse, UserInUpdate
+from ..schemas.users import User, UserInCreate, UserInLogin, UserInResponse, UserInUpdate
 
 
 # router
@@ -20,6 +20,13 @@ router = APIRouter(
     prefix='/users',
     tags=['users']
 )
+
+
+# DB attributes that get excluded in UserInResponse
+db_excluded_attributes = {
+    'hashed_password',
+    'token'
+}
 
 
 # endpoints
@@ -47,9 +54,9 @@ def create_user(
 
 @router.get(
     '/{user_id}', 
-    # response_model=UserInResponse,
+    response_model=UserInResponse,
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(verify_token)]
+    # dependencies=[Depends(verify_token)]
 )
 def get_user(
     user_id: int = Path(gt=0),
@@ -60,13 +67,12 @@ def get_user(
     if user_in_db is None:
         raise HTTPException(status_code=404, detail='User not found')
 
-    # FIX has to have UserInResponse shape
-    # WIP learn how to tarnation use these statements
-    return conn.execute((UserInDB.__table__).select()).fetchall()
+    return UserInResponse.from_orm(user_in_db)
 
 
 @router.put(
-    '/{user_id}/update', 
+    '/{user_id}/update',
+    # response_model=UserInResponse,
     status_code=status.HTTP_200_OK,
     # dependencies=[Depends(verify_token)]
 )
@@ -76,8 +82,14 @@ def update_user(
     db: Session = Depends(get_db)
     # token: str = Depends(oauth2_scheme)
 ):
-    users.update_user(user, user_id, db)
-    return get_user(user_id, db)
+    user_in_db = users.get_user_by_id(user_id, db)
+    if user_in_db is None:
+        raise HTTPException(status_code=404, detail='User not found')
+    
+    user_in_db = users.update_user(user, user_in_db, db)
+
+    return user_in_db
+    return UserInResponse.from_orm(user_in_db)
 
 
 @router.delete(
@@ -87,6 +99,13 @@ def update_user(
 )
 def delete_user(
     user_id: int = Path(gt=0),
+    db: Session = Depends(get_db)
     # token: str = Depends(oauth2_scheme)
 ):
-    return {}
+    user_in_db = users.get_user_by_id(user_id, db)
+    if user_in_db is None:
+        raise HTTPException(status_code=404, detail='User not found')
+    
+    users.delete_user(user_in_db, db)
+
+    return {'HTTP status': status.HTTP_200_OK}
