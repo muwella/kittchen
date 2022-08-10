@@ -47,19 +47,21 @@ def create_user(
 
 @router.get(
     '/{user_id}', 
-    response_model=UserInResponse,
+    # response_model=UserInResponse,
     status_code=status.HTTP_200_OK,
     dependencies=[Depends(verify_token)]
 )
 def get_user(
     user_id: int = Path(gt=0),
     db: Session = Depends(get_db),
-    token: str = Depends(oauth2_scheme)
+    # token: str = Depends(oauth2_scheme)
 ):
     user_in_db = users.get_user_by_id(user_id, db)
     if user_in_db is None:
         raise HTTPException(status_code=404, detail='User not found')
 
+    # FIX has to have UserInResponse shape
+    # WIP learn how to tarnation use these statements
     return conn.execute((UserInDB.__table__).select()).fetchall()
 
 

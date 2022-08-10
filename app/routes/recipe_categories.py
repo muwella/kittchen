@@ -4,7 +4,7 @@ from fastapi import Query, Path, Body
 from fastapi import status
 # models
 from ..models.recipes import RecipeInDB
-from ..models.recipe_categories import RecipeCategoryInDB
+# from ..models.recipe_categories import RecipeCategoryInDB
 from ..schemas.recipes import RecipeInCreate
 from ..schemas.recipe_categories import RecipeCategoryInCreate
 # dependencies

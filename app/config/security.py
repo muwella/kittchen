@@ -15,6 +15,7 @@ JWT_SECRET = 'myjwtsecret'
 
 router = APIRouter(tags=['token'])
 
+
 # tokenURL: the endpoint that creates the token
 # oauth2_scheme looks for the token
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')

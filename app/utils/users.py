@@ -56,12 +56,14 @@ def get_users_by_id(users_id: list[int], db: Session):
 
 # update
 
+# WIP
 def update_user(user: UserInUpdate, user_id: int, db: Session):
     return {}
 
 
 # delete
 
+# WIP
 def delete_user(user_id: int, db: Session):
     db.delete()
     pass

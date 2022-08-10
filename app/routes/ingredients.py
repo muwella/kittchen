@@ -4,7 +4,7 @@ from typing import Union
 from fastapi import APIRouter
 from fastapi import Query, Body, Path
 # models
-from ..schemas.ingredients import Ingredient, IngredientCategory
+# from ..schemas.ingredients import Ingredient, IngredientCategory
 
 
 router = APIRouter(
