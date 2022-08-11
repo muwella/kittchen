@@ -19,10 +19,7 @@ def create_ingredient(
 
 # read
 
-def get_ingredient_by_id(
-    id: int,
-    db: Session
-) -> Union[IngredientInDB, None]:
+def get_ingredient_by_id(id: int, db: Session) -> Union[IngredientInDB, None]:
     return db.query(IngredientInDB).filter(IngredientInDB.id == id).first()
 
 

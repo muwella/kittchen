@@ -1,21 +1,56 @@
+# FastAPI
+from fastapi import HTTPException
+# python
+from typing import Union
 # SQLAlchemy
 from sqlalchemy.orm import Session
-# models
+# models (DB) & schemas
 from ..models.recipes import IngredientInDB, RecipeInDB
 from ..schemas.recipes import RecipeInCreate
-from ..utils.recipe_categories import get_category_by_string
+# utils
 from ..utils.ingredients import get_ingredient_by_id
 
-# WIP raise exceptions
-    # recipe doesn't exist
-    # category doesn't exist
 
+# create
+
+def create_recipe(
+    recipe: RecipeInCreate,
+    user_id: int,
+    db: Session
+):
+    # create recipe instance
+    recipe_in_db = RecipeInDB(
+        **recipe.dict(exclude={'ingredients_id'})
+    )
+
+    db.add(recipe_in_db)
+
+    # create relationships between recipe and ingredients
+    for i in recipe.ingredients_id:
+        # look for ingredient in db
+        ingredient_in_db = get_ingredient_by_id(i, db)
+        recipe.ingredients.append(ingredient_in_db)
+
+    db.commit()
+
+    return {'recipe': recipe_in_db}
+
+
+# read
 
 def get_recipe_by_id(db: Session, recipe_id: int):
     return db.query(RecipeInDB).filter(RecipeInDB.id == recipe_id).first()
 
 
-# DOUBT can i send this query as a JSON?
+# don't think i'll use it
+def get_recipe_by_name(db: Session, recipe_name: str, user_id: id):
+    user_recipes = db.query(RecipeInDB).filter(RecipeInDB.creator_id == user_id)
+    return user_recipes.filter(RecipeInDB.name == recipe_name).first()
+
+
+# filter
+
+
 def filter_recipes_by_category(db: Session, category_id: int):
     return db.query(RecipeInDB).filter(RecipeInDB.category_id == category_id)
 
@@ -26,37 +61,11 @@ def filter_recipes_by_string(string: str, db: Session):
     return db.query(RecipeInDB).filter(string in RecipeInDB.name)
 
 
-# don't think i'll use it
-def get_recipe_by_name(db: Session, recipe_name: str, user_id: id):
-    user_recipes = db.query(RecipeInDB).filter(RecipeInDB.creator_id == user_id)
-    return user_recipes.filter(RecipeInDB.name == recipe_name).first()
+# update
 
 
-def create_recipe(
-    recipe: RecipeInCreate,
-    db: Session,
-    user_id = int
-):
-    # get category_id from received string
-    category_id = get_category_by_string(db, recipe.category)
+# delete
 
-    # get ingredients IDs from list[int] received
-    for id in recipe.ingredients_id:
-        ingredient_in_db = get_ingredient_by_id(id, db)
-        # add a recipe-ingredient relationship with each id
-        pass
-
-    recipe_in_db = RecipeInDB(
-        **recipe.dict(exclude={'category'}),
-        category_id=1,
-        creator_id = user_id
-    )
-    
-    db.add(recipe_in_db)
-    db.commit()
-    db.refresh(recipe_in_db)
-
-    return {'recipe in db': recipe_in_db}
 
 
 

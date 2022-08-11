@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 class RecipeBase(BaseModel):
     name: str
     steps: Union[str, None] = Field(default=None)
-    category_id: Union[int, None] = Field(default=None)
+    # category_id: Union[int, None] = Field(default=None)
     ingredients_id: Union[list[int], None] = Field(default=None)
 
     class Config:
@@ -56,7 +56,7 @@ class RecipeInResponse(Recipe):
 class RecipeInUpdate(BaseModel):
     name: Union[str, None] = Field(default=None)
     steps: Union[str, None] = Field(default=None)
-    category_id: Union[str, None] = Field(default=None)
+    # category_id: Union[str, None] = Field(default=None)
     ingredients_id: Union[list[int], None] = Field(default=None)
 
     class Config:

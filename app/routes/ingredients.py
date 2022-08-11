@@ -1,27 +1,49 @@
 # Python
 from typing import Union
 # FastAPI
-from fastapi import APIRouter
-from fastapi import Query, Body, Path
-# models
-# from ..schemas.ingredients import Ingredient, IngredientCategory
+from fastapi import APIRouter, Depends
+from fastapi import Body, Path, Query
+from fastapi import status, HTTPException
+# SQLAlchemy
+from sqlalchemy.orm import Session
+# utils & dependencies
+from ..utils import ingredients
+from ..utils.dependencies import get_db, verify_token
+from ..config.security import oauth2_scheme
+# models (DB) & schemas
+from ..schemas.ingredients import IngredientInCreate, IngredientInResponse, IngredientInUpdate
 
+
+# router
 
 router = APIRouter(
     prefix='/ingredients'
 )
 
-### INGREDIENTS
 
-# # show all ingredients
-# @router.get('/ingredients')
-# def show_ingredients(
-#     name: Union[str, None] = Query(default=None),
-#     category: Union[IngredientCategory, None] = Query(default=None)
-#     ):
+# endpoints
 
-#     # look for ingredients with query filters
-#     return {name: category}
+@router.post(
+    '/new',
+    status_code=status.HTTP_201_CREATED,
+    # dependencies=[Depends(verify_token)]
+)
+def create_ingredient(
+    ingredient_in: IngredientInCreate = Body(),
+    db: Session = Depends(get_db),
+    # token: str = Depends(oauth2_scheme)
+):
+
+    return {'HTTP status': status.HTTP_201_CREATED}
+
+
+
+@router.get('/ingredients')
+def get_ingredients(
+    name: Union[str, None] = Query(default=None),
+    ):
+
+    return {}
 
 
 # @router.post('/ingredients/new')

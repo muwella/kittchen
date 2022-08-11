@@ -7,8 +7,9 @@ from sqlalchemy.orm import Session
 # utils & dependencies
 from ..utils import recipes
 from ..utils.dependencies import get_db, verify_token
+from ..utils.ingredients import get_ingredient_by_id
+from ..utils.users import get_user_by_id
 # models (DB) & schemas
-from ..models.recipes import RecipeInDB
 from ..schemas.recipes import RecipeInCreate, RecipeInResponse, RecipeInUpdate
 
 
@@ -25,14 +26,26 @@ router = APIRouter(
 @router.post(
     '/new',
     status_code=status.HTTP_201_CREATED,
+    # dependencies=[Depends(verify_token)]
 )
 def create_recipe(
+    user_id: int,
     recipe_in: RecipeInCreate = Body(),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    # token: str = Depends(oauth2_scheme)
 ):
-    # DOUBT would they be any problem creating a new recipe?
-        # it doesn't have any UNIQUE constraint
+    # check for user existence
+    user_in_db = get_user_by_id(user_id, db)
+    if user_in_db is None:
+        raise HTTPException(status_code=404, detail='User not found')
 
+    # check for ingredients' IDs
+    for id in recipe_in.ingredients_id:
+        ingredient_in_db = get_ingredient_by_id(id, db)
+
+        if not ingredient_in_db:
+            raise HTTPException(status_code=404, detail=f'Ingredient {id} not found')
+    
     recipes.create_recipe(recipe_in, db)
 
     return {'HTTP status': status.HTTP_201_CREATED}

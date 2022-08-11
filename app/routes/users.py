@@ -4,14 +4,12 @@ from fastapi import Body, Path
 from fastapi import status, HTTPException
 # SQLAlchemy
 from sqlalchemy.orm import Session
-from ..config.database import conn
 # utils & dependencies
 from ..utils import users
 from ..utils.dependencies import get_db, verify_token
 from ..config.security import oauth2_scheme
 # models (DB) & schemas
-from ..models.users import UserInDB
-from ..schemas.users import User, UserInCreate, UserInLogin, UserInResponse, UserInUpdate
+from ..schemas.users import UserInCreate, UserInResponse, UserInUpdate
 
 
 # router

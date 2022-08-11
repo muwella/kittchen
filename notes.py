@@ -166,3 +166,61 @@
     # web: uvicorn main:app --host 0.0.0.0 --port $PORT
 # New Procfile heroku deploy:
     # web: uvicorn main:app --host 0.0.0.0 --port=${PORT:-5000}
+
+# -----
+    
+'''
+    One-To-Many relationship
+    
+    Parent class has: children = relationship('Child', back_populates='parent')
+    Child class has:
+        ForeignKey to Parent.id
+        parent = relationship('Parent', back_populates='children')
+'''
+
+'''
+    Many-To-Many relationship
+    
+    I create an association table between RecipeInDB and IngredientInDB: RecipeIngredient
+    (later it'll have restrictions concerning creators' IDs when it's not a default ingredient)
+
+    There are two ways of doing a Table like this in SQLAlchemy
+    and to make a Many-To-Many rship I needed to use this one:
+
+    TableName = Table(
+        'table_name',
+        Base.metadata,
+        Column('column_name', DataType, ForeignKey('table.id'), primary_key=True),
+        Column('column_name', DataType, ForeignKey('table.id'), primary_key=True)
+    )
+
+'''
+
+# -----
+
+### DEPRECATED ### recipe_ingredient table that didn't work
+# class RecipeIngredient(Base):
+#     __tablename__ = 'recipe_ingredient'
+#
+#     recipe_id = Column(Integer, ForeignKey('recipes.id'), primary_key=True)
+#     ingredient_id = Column(Integer, ForeignKey('ingredients.id'), primary_key=True)
+
+# -----
+
+# WIP to create recipes, ingredients and their relationships!!
+
+ # Rows in RecipeInDB and IngredientInDB get created as normal
+        # recipe = RecipeInDB(...)
+        # ingredient1 = IngredientInDB(...)
+        # db.session.add_all([recipe, ingredient1])
+        # db.session.commit()
+    
+    # Then
+        # recipe.ingredients.append(ingredient1)
+        # db.session.commit()
+
+    # to remove item:
+        # recipe.ingredients.remove(ingredient1)
+        # db.session.commit()
+
+# -----

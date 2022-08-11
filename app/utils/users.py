@@ -15,6 +15,7 @@ def create_user(
     user: UserInCreate,
     db: Session
 ):
+    # create user instance
     user_in_db = UserInDB(
         **user.dict(exclude={'password'}),
         hashed_password=bcrypt.hash(user.password)
@@ -24,7 +25,7 @@ def create_user(
     db.commit()
     db.refresh(user_in_db)
 
-    return {'user in db': user_in_db}
+    return {'user': user_in_db}
 
 
 # read
