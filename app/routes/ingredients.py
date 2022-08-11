@@ -17,7 +17,8 @@ from ..schemas.ingredients import IngredientInCreate, IngredientInResponse, Ingr
 # router
 
 router = APIRouter(
-    prefix='/ingredients'
+    prefix='/ingredients',
+    tags=['ingredients']
 )
 
 
@@ -29,15 +30,40 @@ router = APIRouter(
     # dependencies=[Depends(verify_token)]
 )
 def create_ingredient(
+    user_id: int,
     ingredient_in: IngredientInCreate = Body(),
     db: Session = Depends(get_db),
     # token: str = Depends(oauth2_scheme)
 ):
-
+    ingredient_in_db = ingredients.get_ingredient_by_name(ingredient_in.name, user_id, db)
+    if ingredient_in_db:
+        raise HTTPException(status_code=400, detail='Ingredient already exists')
+    
+    ingredients.create_ingredient(ingredient_in, user_id, db)
+    
     return {'HTTP status': status.HTTP_201_CREATED}
 
 
+# WIP QUERY
+@router.get(
+    '/{ingredient_id}', 
+    response_model=IngredientInResponse,
+    status_code=status.HTTP_200_OK,
+    # dependencies=[Depends(verify_token)]
+)
+def get_ingredient(
+    ingredient_id: int = Path(gt=0),
+    db: Session = Depends(get_db),
+    # token: str = Depends(oauth2_scheme)
+):
+    ingredient_in_db = ingredients.get_ingredient_by_id(ingredient_id, db)
+    if ingredient_in_db is None:
+        raise HTTPException(status_code=404, detail='Ingredient not found')
 
+    return IngredientInResponse.from_orm(ingredient_in_db)
+
+
+# WIP QUERY - get ingredients plural? ingredients/filter?
 @router.get('/ingredients')
 def get_ingredients(
     name: Union[str, None] = Query(default=None),
@@ -46,32 +72,41 @@ def get_ingredients(
     return {}
 
 
-# @router.post('/ingredients/new')
-# def create_ingredient(ingredient: Ingredient = Body()):
-#     return {'new': 'ingredient'}
+@router.put(
+    '/{ingredient_id}/update',
+    response_model=IngredientInResponse,
+    status_code=status.HTTP_200_OK,
+    # dependencies=[Depends(verify_token)]
+)
+def update_ingredient(
+    ingredient_id: int = Path(gt=0),
+    ingredient_update: IngredientInUpdate = Body(),
+    db: Session = Depends(get_db)
+    # token: str = Depends(oauth2_scheme)
+):
+    ingredient_in_db = ingredients.get_ingredient_by_id(ingredient_id, db)
+    if ingredient_in_db is None:
+        raise HTTPException(status_code=404, detail='Ingredient not found')
+    
+    ingredient_in_db = ingredients.update_ingredient(ingredient_update, ingredient_in_db, db)
+
+    return IngredientInResponse.from_orm(ingredient_in_db)
 
 
-# @router.get('/ingredients/{ingredient_id}')
-# def show_ingredient(
-#     ingredient_id: int = Path(
-#         gt=0,
-#         title='Ingredient',
-#         description='Shows an ingredient'
-#         )
-#     ):
-#     return {"ingredient_id": ingredient_id}
+@router.delete(
+    '/{ingredient_id}/delete',
+    status_code=status.HTTP_200_OK,
+    # dependencies=[Depends(verify_token)]
+)
+def delete_ingredient(
+    ingredient_id: int = Path(gt=0),
+    db: Session = Depends(get_db)
+    # token: str = Depends(oauth2_scheme)
+):
+    ingredient_in_db = ingredients.get_ingredient_by_id(ingredient_id, db)
+    if ingredient_in_db is None:
+        raise HTTPException(status_code=404, detail='Ingredient not found')
+    
+    ingredients.delete_ingredient(ingredient_in_db, db)
 
-
-# TBD only if it's a custom ingredient?
-# NOTE if we use FatSecret API maybe we won't need to customize ingredients
-# @router.put('/ingredients/{ingredient_id}/edit')
-# def update_ingredient(
-#     ingredient_id: int = Path(
-#         title='Ingredient',
-#         description='Updates an ingredient',
-#         gt=0
-#         ),
-#     ingredient: Ingredient = Body(),
-#     ):
-#     # edit ingredient
-#     return {ingredient_id: Ingredient}
+    return {'HTTP status': status.HTTP_200_OK}

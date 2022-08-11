@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 class IngredientBase(BaseModel):
     name: str
-    category_id: int
+    # category_id: int
 
     class Config:
         schema_extra = {
@@ -18,11 +18,15 @@ class IngredientBase(BaseModel):
 
 # sent to user
     # this scheme has DB added info
-# TBD add is_default? add other things? DEFINE
 class Ingredient(IngredientBase):
     id: int
 
+    # in the Pydantic model for reading, add orm_mode = True
+        # this is because orm_mode makes the Pydantic model
+        # compatible with ORMs and I can declare it in the
+        # response_model argument in path operations
     class Config:
+        orm_mode = True
         schema_extra = {
             'example': {
                 'id': 10,
@@ -44,4 +48,4 @@ class IngredientInResponse(Ingredient):
 # received from user
 class IngredientInUpdate(BaseModel):
     name: Union[str, None] = Field(default=None)
-    category_id: Union[int, None] = Field(default=None)
+    # category_id: Union[int, None] = Field(default=None)

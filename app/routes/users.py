@@ -70,13 +70,13 @@ def get_user(
 
 @router.put(
     '/{user_id}/update',
-    # response_model=UserInResponse,
+    response_model=UserInResponse,
     status_code=status.HTTP_200_OK,
     # dependencies=[Depends(verify_token)]
 )
 def update_user(
     user_id: int = Path(gt=0),
-    user: UserInUpdate = Body(),
+    user_update: UserInUpdate = Body(),
     db: Session = Depends(get_db)
     # token: str = Depends(oauth2_scheme)
 ):
@@ -84,9 +84,8 @@ def update_user(
     if user_in_db is None:
         raise HTTPException(status_code=404, detail='User not found')
     
-    user_in_db = users.update_user(user, user_in_db, db)
+    user_in_db = users.update_user(user_update, user_in_db, db)
 
-    return user_in_db
     return UserInResponse.from_orm(user_in_db)
 
 
