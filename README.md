@@ -47,26 +47,25 @@ You can see the automatic interactive API documentation on your localhost: http:
     ├── config
     │   ├── database.py
     │   └── security.py 
-    ├── models                          - ORM models of relational database 
-    │   ├── images.py (WIP)
+    ├── models                          - ORM models (SQLAlchemy) 
     │   ├── ingredient_categories.py
     │   ├── ingredients.py
     │   ├── recipe_categories.py
     │   ├── recipe_ingredients.py
     │   ├── recipes.py
     │   └── users.py
-    ├── routes                          -  
+    ├── routes                          - API routing
     │   ├── ingredients.py
     │   ├── main.py ?
     │   ├── recipe_categories.py
     │   ├── recipes.py
     │   └── users.py
-    ├── schemas                         -
+    ├── schemas                         - Pydantic models
     │   ├── ingredients.py
     │   ├── recipe_categories.py
     │   ├── recipes.py
     │   └── users.py
-    ├── utils                           -
+    ├── utils                           - CRUD and other essencials
     │   ├── authentication.py
     │   ├── dependencies.py
     │   ├── errors.py
